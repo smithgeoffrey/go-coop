@@ -1,8 +1,7 @@
 // Geoff Smith, Dec 2017. Small REST api for ckicken coop automation.
 //
-// I'm try my first framework `gin` for this. I started here but changed stuff around.  See, https://medium.com/@thedevsaddam/build-restful-api-service-in-golang-using-gin-gonic-framework-85b1a6e176f3
-// I'm using `https://github.com/golang/dep` to manage dependencies into a /vendor/ subdir in this project, as a next step
-// toward pinning down dep versions.
+// I'm trying my first web framework (gin) for this. 
+// I started here: https://medium.com/@thedevsaddam/build-restful-api-service-in-golang-using-gin-gonic-framework-85b1a6e176f3
 //
 // Frontend:
 //     /        - home

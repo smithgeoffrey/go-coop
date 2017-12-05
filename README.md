@@ -16,7 +16,7 @@ I already have a network camera from a past project. If we add a raspberry pi an
 
 ### Project Structure
 
-On the raspberry pi, I install go at /usr/local/go but you could put it anywhere. Just download the `arm` version and unzip it there. That is GOROOT, not to be confused with GOPATH.  GOPATH sets your so-called `workspace` where you develop your code, having three subdirs: `bin`, `pkg`, `src`. You also want to add the GOROOT binary to your PATH so that you can run `go <options>` at the command line.  Here's my bashrc for all of this:
+Read https://golang.org/doc/code.html#Organization. On the raspberry pi, I install go at /usr/local/go but you could put it anywhere. Just download the `arm` version and unzip it there. That is GOROOT, not to be confused with GOPATH.  GOPATH sets your so-called `workspace` where you develop your code, having three subdirs: `bin`, `pkg`, `src`. You also want to add the GOROOT binary to your PATH so that you can run `go <options>` at the command line.  Here's my bashrc for all of this:
 
     export GOROOT=/usr/local/go
     export GOPATH=$HOME
@@ -44,7 +44,7 @@ Most of the time you don't need to worry about the `bin` or `pkg` under GOPATH. 
           - index.html
         - vendor/
 
-I keep coop/ as its own repo in version control.  Static and Templates are straightforward. Vendor I'll use for dependency managment, this being my first attempt at that and using `https://github.com/golang/dep` for it. Config sets environment variables consumed by a startup script for the service in systemd that I created. For a startup script, I created /etc/systemd/system/coop.service:
+I keep coop/ as its own repo in version control.  Static and templates are straightforward. Vendor is for dependency managment.  I wanted to use `https://github.com/golang/dep` which worked for local development but it wouldn't run on the rpi I think because it lacks an `arm` version of the installer.  Config sets environment variables consumed by a startup script for the service in systemd that I created at /etc/systemd/system/coop.service, below.  It lets me start the app like `systemctl start coop`:
 
     [Unit]
     Description=Golang Chicken Coop Web Service
