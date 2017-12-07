@@ -1,6 +1,6 @@
-nohup.out
+vendor/*
+!vendor/vendor.json
 .idea
 *.iml
 *.toml
 *.lock
-vendor/

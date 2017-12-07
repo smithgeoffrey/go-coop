@@ -22,8 +22,11 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/gin-gonic/gin"
-	"net/http"
+
+	"github.com/smithgeoffrey/go-coop/api"
+	"github.com/smithgeoffrey/go-coop/ui"
 )
 
 type DoorSensor struct {
@@ -34,7 +37,7 @@ type DoorSensor struct {
 
 type TempSensor struct {
 	Name     string  `json:"name"`
-	Location string  `hson`
+	Location string  `json:"location"`
 	Value    float32 `json:"inside"`
 }
 
@@ -47,44 +50,24 @@ type Video struct {
 func main() {
 	router := gin.Default()
 
-	api := router.Group("/api/v1")
+	r1 := router.Group("/api/v1")
 	{
-		// api
-		api.GET("/sensor", apiListSensors)
-		api.GET("/sensor/door", apiListDoorSensors)
-		api.GET("/sensor/door/:id", apiGetDoorSensor)
-		api.GET("/sensor/temp", apiListTempSensors)
-		api.GET("/sensor/temp/:id", apiGetTempSensor)
-		api.GET("/video", apiListVideo)
-		api.GET("/video/:id", apiGetVideo)
+		r1.GET("/sensor", api.ListSensors)
+		r1.GET("/sensor/door", api.ListDoorSensors)
+		r1.GET("/sensor/door/:id", api.GetDoorSensor)
+		r1.GET("/sensor/temp", api.ListTempSensors)
+		r1.GET("/sensor/temp/:id", api.GetTempSensor)
+		r1.GET("/video", api.ListVideo)
+		r1.GET("/video/:id", api.GetVideo)
 	}
 
-	ui := router.Group("")
+	r2 := router.Group("")
 	{
-		ui.GET("/", uiHome)
-		ui.GET("/param/:name", uiParam)
+		r2.GET("/", ui.Home)
+		r2.GET("/param/:name", ui.Param)
 	}
 
 	fmt.Println("Starting :8080 listener")
 	router.Run()
 }
 
-// compare
-func uiHome(c *gin.Context) {
-	// name := c.Param("name")
-	c.String(http.StatusOK, "Hello %s", "chickens home page")
-}
-
-func uiParam(c *gin.Context) {
-	name := c.Param("name")
-	c.String(http.StatusOK, "Hello passed param in route: %s", name)
-}
-
-// Todo: fill in these api funcs
-func apiListSensors(c *gin.Context)     {}
-func apiListDoorSensors(c *gin.Context) {}
-func apiGetDoorSensor(c *gin.Context)   {}
-func apiListTempSensors(c *gin.Context) {}
-func apiGetTempSensor(c *gin.Context)   {}
-func apiListVideo(c *gin.Context)       {}
-func apiGetVideo(c *gin.Context)        {}
