@@ -8,7 +8,6 @@ import (
 
 // compare
 func Home(c *gin.Context) {
-	// name := c.Param("name")
 	c.String(http.StatusOK, "Hello %s", "chickens home page")
 }
 

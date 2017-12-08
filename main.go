@@ -29,24 +29,6 @@ import (
 	"github.com/smithgeoffrey/go-coop/ui"
 )
 
-type DoorSensor struct {
-	Name     string `json:"name"`
-	Location string `json:"location"`
-	Value    bool   `json:"value"`
-}
-
-type TempSensor struct {
-	Name     string  `json:"name"`
-	Location string  `json:"location"`
-	Value    float32 `json:"inside"`
-}
-
-type Video struct {
-	Name string `json:"name"`
-	Ip   string `json:"ip"`
-	Url  string `json:"url"`
-}
-
 func main() {
 	router := gin.Default()
 
