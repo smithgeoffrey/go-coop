@@ -1,23 +1,3 @@
-// Geoff Smith, Dec 2017. Small REST api for ckicken coop automation.
-//
-// I'm trying my first web framework (gin) for this. 
-// I started here: https://medium.com/@thedevsaddam/build-restful-api-service-in-golang-using-gin-gonic-framework-85b1a6e176f3
-//
-// Frontend:
-//     /        - home
-//     /video   - ip cameras
-//     /sensors - door and temp stats
-//
-// Api:
-//     /api/v1/sensors         - list sensors
-//     /api/v1/sensors/door    - list door sensors
-//     /api/v1/sensors/door:id - get status of one of the door sensors
-//     /api/v1/sensors/temp    - list temp sensors
-//     /api/v1/sensors/temp:id - get status of one of the temp sensors
-//     /api/v1/video           - list video sources
-//     /api/v1/video:id        - get one of the video sources
-//
-
 package main
 
 import (
