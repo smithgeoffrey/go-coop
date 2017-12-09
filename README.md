@@ -62,6 +62,7 @@ Temperature sensors: https://www.amazon.com/gp/product/B01IOK40DA/ref=oh_aui_det
 
 [3] https://semaphoreci.com/community/tutorials/building-go-web-applications-and-microservices-using-gin and
 https://semaphoreci.com/community/tutorials/test-driven-development-of-go-web-applications-with-gin
+http://cgrant.io/tutorials/go/simple-crud-api-with-go-gin-and-gorm/
 
 [4] Bashrc:
 

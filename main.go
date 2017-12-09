@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 
 	"github.com/smithgeoffrey/go-coop/api"
@@ -30,6 +28,5 @@ func main() {
 		r2.GET("/param/:name", ui.Param)
 	}
 
-	fmt.Println("Starting :8080 listener")
-	router.Run()
+	router.Run(":8080")
 }
