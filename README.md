@@ -6,27 +6,32 @@ I had been looking for a real-world project to help me learn go.  I recently add
 
 Avoiding software was nice: no bugs or releases, no patching or upgrades. I hooked a few things together, and the door just does its thing.  But I wanted to remotely verify coop status, particularly in the winter. I had a network camera lying around from a past project. All I needed was to add a raspberry pi and a couple types of sensors. 
 
-- install go on the pi and serve a webapp displaying coop sensors and video.
+- install go on the pi and serve a webapp displaying coop sensors and video
 - is the door really up or down as expected
 - what are the temps outside versus inside the coop
-- how about a live video stream of the run, where the birds spend nearly all of their awake time
+- a live video stream of the run, where the birds spend nearly all of their awake time (when not freeranging in the backyard on weekends)
 
 Here's a parts list. [2]
 
 ### Design
 
-I loosely followed some tutorials on webapps using go/gin. [3]  I wanted just a few basic features:
+I loosely followed some tutorials on webapps using go/gin. [3]  I wanted just a few basics:
+
+    TESTING
+    - include testing as a top-level package, a first-class citizen
 
     UI
+    - keep UI as it's own top-level package
     - HTML templates
     - reusable components like header, footer, menu and sidebar
     - auth for home page
     
     API
+    - keep API as it's own top-level package
     - json
 
     DATABASE
-    - use an ORM and keep a small relationalal database (maybe postgres)
+    - use an ORM and keep a small database
 
     GENRERALLY
     - keep everything broken out and modular so the structure looks simple and clean even as the app grows
@@ -40,9 +45,9 @@ I loosely followed:
 
 On the raspberry pi, I install go at /usr/local/go but you could put it anywhere. Just download the `arm` version and unzip it there. That is GOROOT, not to be confused with GOPATH.  GOPATH sets your `workspace` having three subdirs `bin`, `pkg`, `src`, with your code under `src`. You also want to add the GOROOT binary to your PATH so that you can run `go <options>` at the command line.  Here's my bashrc for all of this. [4]
 
-The app is broken out into packages for api, ui and test.  Vendor is for dependency managment. [5]  Config sets environment variables consumed by a startup script for the service in systemd that I created. [6]  
+The app is broken out into packages for api, ui and test.  Vendor is for dependency managment. [5]  Config sets environment variables consumed by a startup script for the service in systemd that I created. [6]
 
-I used an IDE called GoLand. [7]
+I used an IDE called GoLand. [7]  I developed on my laptop and pushed to the pi over many iterations.
 
 ### References
 
