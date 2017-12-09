@@ -23,7 +23,6 @@ func initializeRoutes(router *gin.Engine) {
 	r2 := router.Group("")
 	{
 		r2.GET("/", ui.Home)
-		r2.GET("/param/:name", ui.Param)
 	}
 
 }
