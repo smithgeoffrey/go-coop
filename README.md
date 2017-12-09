@@ -19,6 +19,7 @@ I loosely followed some tutorials on webapps using go/gin. [3]  I wanted just a 
 
     TESTING
     - include testing as a top-level package, a first-class citizen
+    - play with mocking
 
     UI
     - keep UI as it's own top-level package
@@ -31,7 +32,7 @@ I loosely followed some tutorials on webapps using go/gin. [3]  I wanted just a 
     - json
 
     DATABASE
-    - use an ORM and keep a small database
+    - use GORM and keep a small database
 
     GENRERALLY
     - keep everything broken out and modular so the structure looks simple and clean even as the app grows
