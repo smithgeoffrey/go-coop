@@ -6,9 +6,14 @@ import (
         "github.com/gin-gonic/gin"
 )
 
-// compare
 func Home(c *gin.Context) {
-	c.String(http.StatusOK, "Hello %s", "chickens home page")
+	// HTML method of Context to render a template
+	c.HTML(http.StatusOK, "index.html",
+		// pass data to the template
+		gin.H{
+			"title": "Home Page",
+		},
+	)
 }
 
 func Param(c *gin.Context) {

@@ -14,6 +14,18 @@ I had a network camera lying around from a past project. All I needed was to add
 
 - install go on the pi and serve a webapp displaying coop sensors and video. Here's a parts list. [2]
 
+### Webapp design
+
+I followed a tutorial on webapps using go/gin. [3]  I wanted some basic features:
+
+    UI
+    - basic auth for home page
+    - HTML templates
+    - reusable components like header, footer, menu and sidebar
+    
+    API
+    - json
+
 ### Project Setup
 
 I loosely followed:
@@ -22,9 +34,9 @@ I loosely followed:
 - (vendoring) http://lucasfcosta.com/2017/02/07/Understanding-Go-Dependency-Management.html and https://github.com/golang/dep
 - (web framework) https://github.com/gin-gonic/gin
 
-On the raspberry pi, I install go at /usr/local/go but you could put it anywhere. Just download the `arm` version and unzip it there. That is GOROOT, not to be confused with GOPATH.  GOPATH sets your `workspace` having three subdirs `bin`, `pkg`, `src`, with your code under `src`. You also want to add the GOROOT binary to your PATH so that you can run `go <options>` at the command line.  Here's my bashrc for all of this. [3]
+On the raspberry pi, I install go at /usr/local/go but you could put it anywhere. Just download the `arm` version and unzip it there. That is GOROOT, not to be confused with GOPATH.  GOPATH sets your `workspace` having three subdirs `bin`, `pkg`, `src`, with your code under `src`. You also want to add the GOROOT binary to your PATH so that you can run `go <options>` at the command line.  Here's my bashrc for all of this. [4]
 
-The app is broken out into packages for api, ui and test.  Vendor is for dependency managment. [4]  Config sets environment variables consumed by a startup script for the service in systemd that I created. [5]
+The app is broken out into packages for api, ui and test.  Vendor is for dependency managment. [5]  Config sets environment variables consumed by a startup script for the service in systemd that I created. [6]
 
 ### References
 
@@ -48,16 +60,19 @@ Door position sensors: https://www.amazon.com/gp/product/B0009SUF08/ref=oh_aui_d
 
 Temperature sensors: https://www.amazon.com/gp/product/B01IOK40DA/ref=oh_aui_detailpage_o02_s01?ie=UTF8&psc=1
 
-[3] Bashrc:
+[3] https://semaphoreci.com/community/tutorials/building-go-web-applications-and-microservices-using-gin and
+https://semaphoreci.com/community/tutorials/test-driven-development-of-go-web-applications-with-gin
+
+[4] Bashrc:
 
     export GOROOT=/usr/local/go
     export GOPATH=$HOME
     mkdir -p $GOPATH/bin $GOPATH/pkg $GOPATH/src 
     export PATH+=:$GOROOT/bin
 
-[4] I wanted to try vendoring with `https://github.com/golang/dep`.  I installed it using `brew install dep` (laptop) and `go get -u github.com/golang/dep/...` (raspberry pi).
+[5] I wanted to try vendoring with `https://github.com/golang/dep`.  I installed it using `brew install dep` (laptop) and `go get -u github.com/golang/dep/...` (raspberry pi).
 
-[5] It lives at /etc/systemd/system/coop.service as shown.  It lets me do `systemctl start coop`:
+[6] It lives at /etc/systemd/system/coop.service as shown.  It lets me do `systemctl start coop`:
     
     [Unit]
     Description=Golang Chicken Coop Web Service

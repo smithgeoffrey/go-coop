@@ -11,6 +11,7 @@ import (
 
 func main() {
 	router := gin.Default()
+	router.LoadHTMLGlob("ui/templates/*")
 
 	r1 := router.Group("/api/v1")
 	{
@@ -32,4 +33,3 @@ func main() {
 	fmt.Println("Starting :8080 listener")
 	router.Run()
 }
-
