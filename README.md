@@ -17,25 +17,27 @@ Here's a parts list. [2]
 
 I loosely followed some tutorials on webapps using go/gin. [3]  I wanted just a few basics:
 
+    GENRERALLY
+    - keep everything broken out and modular so the structure looks simple and clean even as the app grows
+
     TESTING
     - include testing as a top-level package, a first-class citizen
     - play with mocking
+    - play with continuously building/testing the app
 
+    DATABASE
+    - use GORM and keep a small database
+    - try sqlite, mongo, mysql and postgres
+    
     UI
-    - keep UI as it's own top-level package
+    - keep UI as a top-level package
     - HTML templates
     - reusable components like header, footer, menu and sidebar
     - auth for home page
     
     API
-    - keep API as it's own top-level package
+    - keep API as a top-level package
     - json
-
-    DATABASE
-    - use GORM and keep a small database
-
-    GENRERALLY
-    - keep everything broken out and modular so the structure looks simple and clean even as the app grows
 
 ### Project Setup
 
