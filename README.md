@@ -17,14 +17,16 @@ Here's a parts list. [2]
 
 I loosely followed some tutorials on webapps using go/gin. [3]  I wanted just a few basics:
 
-    GENRERALLY
+    GENERALLY
     - keep everything broken out and modular so the structure looks simple and clean even as the app grows
-
+    - use dependency managment [4]
+    - use a debugger [5]
+    
     TESTING
     - include testing as a top-level package, a first-class citizen
     - play with mocking
     - play with continuously building/testing the app
-
+    
     DATABASE
     - use GORM and keep a small database
     - try sqlite, mongo, mysql and postgres
@@ -48,7 +50,7 @@ I loosely followed:
 
 On the raspberry pi, I install go at /usr/local/go but you could put it anywhere. Just download the `arm` version and unzip it there. That is GOROOT, not to be confused with GOPATH.  GOPATH sets your `workspace` having three subdirs `bin`, `pkg`, `src`, with your code under `src`. You also want to add the GOROOT binary to your PATH so that you can run `go <options>` at the command line.  Here's my bashrc for all of this. [4]
 
-The app is broken out into packages for api, ui and test.  Vendor is for dependency managment. [5]  Config sets environment variables consumed by a startup script for the service in systemd that I created. [6]
+The top-level config/ sets environment variables consumed by a startup script for the service in systemd that I created. [6]
 
 I used an IDE called GoLand. [7]  I developed on my laptop and pushed to the pi over many iterations.
 
@@ -79,16 +81,18 @@ https://semaphoreci.com/community/tutorials/building-go-web-applications-and-mic
 https://semaphoreci.com/community/tutorials/test-driven-development-of-go-web-applications-with-gin
 http://cgrant.io/tutorials/go/simple-crud-api-with-go-gin-and-gorm/
 
-[4] Bashrc:
+[4] I want to try vendoring with `https://github.com/golang/dep`.  I installed it using `brew install dep` (laptop) and `go get -u github.com/golang/dep/...` (raspberry pi).  For a debugger, I want to try  
+
+[5] See https://lincolnloop.com/blog/debugging-go-code/.  I want to try delv versus godebug at https://github.com/derekparker/delve and https://github.com/mailgun/godebug, respectively, and whatever GoLand's IDE has if anything.
+
+[6] Bashrc:
 
     export GOROOT=/usr/local/go
     export GOPATH=$HOME
     mkdir -p $GOPATH/bin $GOPATH/pkg $GOPATH/src 
     export PATH+=:$GOROOT/bin
 
-[5] I wanted to try vendoring with `https://github.com/golang/dep`.  I installed it using `brew install dep` (laptop) and `go get -u github.com/golang/dep/...` (raspberry pi).
-
-[6] It lives at /etc/systemd/system/coop.service as shown.  It lets me do `systemctl start coop`:
+[7] It lives at /etc/systemd/system/coop.service as shown.  It lets me do `systemctl start coop`:
     
     [Unit]
     Description=Golang Chicken Coop Web Service
@@ -103,4 +107,4 @@ http://cgrant.io/tutorials/go/simple-crud-api-with-go-gin-and-gorm/
     WantedBy=multi-user.target
     Alias=coop.service
 
-[7] https://www.jetbrains.com/go/
+[8] https://www.jetbrains.com/go/
