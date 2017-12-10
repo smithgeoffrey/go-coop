@@ -24,7 +24,7 @@ type Video struct {
 	Url  string `json:"url"`
 }
 
-var door *Door
+var door Door
 
 func GetDoor(c *gin.Context) {
 	door.Get()

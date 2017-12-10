@@ -1,13 +1,16 @@
 package api
 
 import (
-	"fmt"
-
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
+	//"github.com/jinzhu/gorm"
+	//_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 func (d *Door) Get() {
+
+	// mock the sensors for now
+	d.DownSensor = true
+	d.UpSensor = true
+
 	if d.DownSensor && !(d.UpSensor) {
 		d.Status = "down"
 	} else if d.UpSensor && !(d.DownSensor) {
