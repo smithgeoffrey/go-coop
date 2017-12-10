@@ -8,15 +8,10 @@ import (
 )
 
 func initializeRoutes(router *gin.Engine) {
-
 	r1 := router.Group("/api/v1")
 	{
-		r1.GET("/sensor", api.ListSensors)
-		r1.GET("/sensor/door", api.ListDoorSensors)
-		r1.GET("/sensor/door/:id", api.GetDoorSensor)
-		r1.GET("/sensor/temp", api.ListTempSensors)
-		r1.GET("/sensor/temp/:id", api.GetTempSensor)
-		r1.GET("/video", api.ListVideo)
+		r1.GET("/sensor/door", api.GetDoor)
+		r1.GET("/sensor/temp", api.GetTemp)
 		r1.GET("/video/:id", api.GetVideo)
 	}
 
@@ -24,5 +19,4 @@ func initializeRoutes(router *gin.Engine) {
 	{
 		r2.GET("/", ui.Home)
 	}
-
 }

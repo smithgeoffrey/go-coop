@@ -1,9 +1,9 @@
 package ui
 
 import (
-    "net/http"
+	"net/http"
 
-    "github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
 )
 
 func Home(c *gin.Context) {
@@ -14,4 +14,3 @@ func Home(c *gin.Context) {
 		},
 	)
 }
-

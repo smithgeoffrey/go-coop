@@ -29,7 +29,7 @@ I loosely followed some tutorials on webapps using go/gin. [3]  I wanted just a 
     
     DATABASE
     - run postgres
-    - use GORM to interact with it
+    - use GORM to interact with it (http://jinzhu.me/gorm/)
     
     UI
     - keep UI as a top-level package
