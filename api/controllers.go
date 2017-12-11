@@ -7,25 +7,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Door struct {
-	UpSensor  bool `json:"upsensor"`
-	DownSensor  bool `json:"downsensor"`
-	Status string `json:"status"`
-}
-
-type Temp struct {
-	InsideSensor float32 `json:"inside"`
-	OutsideSensor float32 `json:"outside"`
-}
-
-type Video struct {
-	Location string `json:"location"`
-	Url  string `json:"url"`
-}
-
-var door Door
-var temp Temp
-var video Video
+var (
+	door Door
+	temp Temp
+	video Video
+)
 
 func GetDoor(c *gin.Context) {
 	door.Get()

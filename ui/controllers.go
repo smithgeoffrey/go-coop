@@ -2,8 +2,8 @@ package ui
 
 import (
 	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"github.com/smithgeoffrey/go-coop/config"
 )
 
 func Home(c *gin.Context) {
@@ -11,6 +11,7 @@ func Home(c *gin.Context) {
 		// pass data to the template
 		gin.H{
 			"title": "Home Page",
+			"video_url": config.VIDEO_URL,
 		},
 	)
 }
