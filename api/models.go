@@ -1,15 +1,16 @@
 package api
 
 import (
+	"github.com/smithgeoffrey/go-coop/config"
+
 	//"github.com/jinzhu/gorm"
 	//_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 func (d *Door) Get() {
-
 	// mock the sensors for now
-	d.DownSensor = true
-	d.UpSensor = false
+	d.DownSensor = config.MOCK_DOOR_DOWN_SENSOR
+	d.UpSensor = config.MOCK_DOOR_UP_SENSOR
 
 	if d.DownSensor && !(d.UpSensor) {
 		d.Status = "down"
@@ -21,15 +22,12 @@ func (d *Door) Get() {
 }
 
 func (t *Temp) Get() {
-
 	// mock the sensors for now
-	t.InsideSensor = 35.1
-	t.OutsideSensor = 28.4
+	t.InsideSensor = config.MOCK_TEMP_INSIDE_SENSOR
+	t.OutsideSensor = config.MOCK_TEMP_OUTSIDE_SENSOR
 }
 
 func (v *Video) Get() {
-
-	// mock the sensors for now
 	v.Location = "run"
-	v.Url = "http://172.16.1.128/video.mjpg"
+	v.Url = config.VIDEO_URL
 }
