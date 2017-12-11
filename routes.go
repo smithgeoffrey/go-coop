@@ -12,7 +12,6 @@ func initializeRoutes(router *gin.Engine) {
 	{
 		r1.GET("/sensor/door", api.GetDoor)
 		r1.GET("/sensor/temp", api.GetTemp)
-		r1.GET("/video/:id", api.GetVideo)
 	}
 
 	r2 := router.Group("")

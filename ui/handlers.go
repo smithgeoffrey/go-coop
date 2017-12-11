@@ -7,11 +7,7 @@ import (
 )
 
 func Home(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.html",
-		// pass data to the template
-		gin.H{
+	c.HTML(http.StatusOK, "index.html", gin.H{
 			"title": "Home Page",
-			"video_url": config.VIDEO_URL,
-		},
-	)
+			"video_url": config.VIDEO_URL })
 }
