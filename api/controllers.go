@@ -15,39 +15,44 @@ type Door struct {
 
 type Temp struct {
 	InsideSensor float32 `json:"inside"`
-	OutideSensor float32 `json:"outside"`
+	OutsideSensor float32 `json:"outside"`
 }
 
 type Video struct {
 	Location string `json:"location"`
-	Ip   string `json:"ip"`
 	Url  string `json:"url"`
 }
 
 var door Door
+var temp Temp
+var video Video
 
 func GetDoor(c *gin.Context) {
 	door.Get()
 	c.JSON(http.StatusOK, gin.H{
-		"message": door.Status,
+		"status": door.Status,
 	})
 }
 
 func GetTemp(c *gin.Context) {
+    temp.Get()
 	c.JSON(http.StatusOK, gin.H{
-		"message": fmt.Sprintf("get temp sensor"),
+		"inside": temp.InsideSensor,
+		"outside": temp.OutsideSensor,
 	})
 }
 
 func GetVideo(c *gin.Context) {
 	id := c.Param("id")
-	if id != "run" {
+    video.Get()
+	if id == "run" {
 		c.JSON(http.StatusOK, gin.H{
-			"message": fmt.Sprintf("Must pass param `run` not %s", id),
+			"location": video.Location,
+			"url": video.Url,
 		})
 	} else {
 		c.JSON(http.StatusOK, gin.H{
-			"message": fmt.Sprintf("get video %s", id),
+			"message": fmt.Sprintf("Must pass `run` not %s", id),
 		})
 	}
 }
