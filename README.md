@@ -1,4 +1,4 @@
-# Chicken Coop Automation Using Golang 
+# Chicken Coop Automation in Go
 
 ### Overview
 
@@ -104,7 +104,7 @@ http://cgrant.io/tutorials/go/simple-crud-api-with-go-gin-and-gorm/
 
 [4] I want to try vendoring with `https://github.com/golang/dep`.  I installed it using `brew install dep` (laptop) and `go get -u github.com/golang/dep/...` (raspberry pi).  For a debugger, I want to try  
 
-[5] See https://lincolnloop.com/blog/debugging-go-code/.  I want to try delv versus godebug at https://github.com/derekparker/delve and https://github.com/mailgun/godebug, respectively, and whatever GoLand's IDE has if anything.
+[5] See https://lincolnloop.com/blog/debugging-go-code/.  I want to try delv versus godebug at https://github.com/derekparker/delve and https://github.com/mailgun/godebug, respectively, and whatever my IDE has if anything.
 
 [5] Bashrc:
 

@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	door Door
-	temp Temp
+	door  Door
+	temp  Temp
 	video Video
 )
 
@@ -21,20 +21,20 @@ func GetDoor(c *gin.Context) {
 }
 
 func GetTemp(c *gin.Context) {
-    temp.Get()
+	temp.Get()
 	c.JSON(http.StatusOK, gin.H{
-		"inside": temp.InsideSensor,
+		"inside":  temp.InsideSensor,
 		"outside": temp.OutsideSensor,
 	})
 }
 
 func GetVideo(c *gin.Context) {
 	id := c.Param("id")
-    video.Get()
+	video.Get()
 	if id == "run" {
 		c.JSON(http.StatusOK, gin.H{
 			"location": video.Location,
-			"url": video.Url,
+			"url":      video.Url,
 		})
 	} else {
 		c.JSON(http.StatusOK, gin.H{

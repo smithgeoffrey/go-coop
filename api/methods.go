@@ -2,7 +2,6 @@ package api
 
 import (
 	"github.com/smithgeoffrey/go-coop/config"
-
 	//"github.com/jinzhu/gorm"
 	//_ "github.com/jinzhu/gorm/dialects/postgres"
 )
