@@ -12,3 +12,4 @@ So far I'm ignoring errors largely. Try modifying everything to return, also, er
             return "", errors.New("Tried to get a key which doesn't exist")
         }
     }
+

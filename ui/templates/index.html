@@ -3,7 +3,12 @@
 <!--Embed the header.html template at this location-->
 {{ template "header.html" .}}
 
-<img src="{{ .video_url }}">
+
+<img src="{{ .videoUrl }}"> <br />
+Door: {{ .doorStatus }} <br />
+Temp Outside: {{ .tempOutside }} <br />
+Temp Inside: {{ .tempInside }} <br />
 
 <!--Embed the footer.html template at this location-->
 {{ template "footer.html" .}}
+
