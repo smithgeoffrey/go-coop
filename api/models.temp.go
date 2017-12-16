@@ -3,8 +3,8 @@ package api
 import "github.com/smithgeoffrey/go-coop/config"
 
 type Temp struct {
-	InsideSensor  string `json:"inside"`
-	OutsideSensor string `json:"outside"`
+	InsideSensor  string `json:"insidesensor"`
+	OutsideSensor string `json:"outsidesensor"`
 }
 
 func (t *Temp) Get() {
