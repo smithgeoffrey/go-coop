@@ -43,7 +43,7 @@ I loosely followed some tutorials on webapps using go/gin. [3]  I wanted just a 
 
 ### Database
 
-I wanted to have postgres running on the pi, available for the go app.  Here are the steps that did that for me. [4] From my laptop, using the IDE, I connected to postgres running on the pi.
+I wanted to have postgres running on the pi, available for the go app.  Here are the steps that did that for me. [6] From my laptop, using the IDE, I connected to postgres running on the pi.
 
 ### Project Setup
 
@@ -52,11 +52,11 @@ I loosely followed:
 - (organization) https://golang.org/doc/code.html#Organization 
 - (vendoring) http://lucasfcosta.com/2017/02/07/Understanding-Go-Dependency-Management.html and https://github.com/golang/dep
 
-On the raspberry pi, I install go at /usr/local/go but you could put it anywhere. Just download the `arm` version and unzip it there. That is GOROOT, not to be confused with GOPATH.  GOPATH sets your `workspace` having three subdirs `bin`, `pkg`, `src`, with your code under `src`. You also want to add the GOROOT binary to your PATH so that you can run `go <options>` at the command line.  Here's my bashrc for all of this. [5]
+On the raspberry pi, I install go at /usr/local/go but you could put it anywhere. Just download the `arm` version and unzip it there. That is GOROOT, not to be confused with GOPATH.  GOPATH sets your `workspace` having three subdirs `bin`, `pkg`, `src`, with your code under `src`. You also want to add the GOROOT binary to your PATH so that you can run `go <options>` at the command line.  Here's my bashrc for all of this. [7]
 
-The top-level config/ sets environment variables consumed by a startup script for the service in systemd that I created. [6]
+The top-level config/ sets environment variables consumed by a startup script for the service in systemd that I created. [8]
 
-I used an IDE called GoLand. [7]  I developed on my laptop and pushed to the pi over many iterations.
+I used an IDE called GoLand. [9] I developed on my laptop and pushed to the pi over many iterations.
 
 ### References
 
@@ -85,7 +85,11 @@ https://semaphoreci.com/community/tutorials/building-go-web-applications-and-mic
 https://semaphoreci.com/community/tutorials/test-driven-development-of-go-web-applications-with-gin
 http://cgrant.io/tutorials/go/simple-crud-api-with-go-gin-and-gorm/
 
-[4] Install postgres on the pi:
+[4] I want to try vendoring with `https://github.com/golang/dep`.  I installed it using `brew install dep` (laptop) and `go get -u github.com/golang/dep/...` (raspberry pi). 
+
+[5] See https://lincolnloop.com/blog/debugging-go-code/.  I want to try delv versus godebug at https://github.com/derekparker/delve and https://github.com/mailgun/godebug, respectively, and whatever my IDE has if anything.
+
+[6] Install postgres on the pi:
 
     apt-get update && apt-get install postgresql-9.4
     echo "host  all  all  172.16.1.0/24 md5" >> /etc/postgresql/9.4/main/pg_hba.conf
@@ -102,18 +106,14 @@ http://cgrant.io/tutorials/go/simple-crud-api-with-go-gin-and-gorm/
     > grant all privileges on database coop to youradminusernameofchoice;
     > \q
 
-[4] I want to try vendoring with `https://github.com/golang/dep`.  I installed it using `brew install dep` (laptop) and `go get -u github.com/golang/dep/...` (raspberry pi).  For a debugger, I want to try  
-
-[5] See https://lincolnloop.com/blog/debugging-go-code/.  I want to try delv versus godebug at https://github.com/derekparker/delve and https://github.com/mailgun/godebug, respectively, and whatever my IDE has if anything.
-
-[5] Bashrc:
+[7] Bashrc:
 
     export GOROOT=/usr/local/go
     export GOPATH=$HOME
     mkdir -p $GOPATH/bin $GOPATH/pkg $GOPATH/src 
     export PATH+=:$GOROOT/bin
 
-[7] It lives at /etc/systemd/system/coop.service as shown.  It lets me do `systemctl start coop`:
+[8] It lives at /etc/systemd/system/coop.service as shown.  It lets me do `systemctl start coop`:
     
     [Unit]
     Description=Golang Chicken Coop Web Service
@@ -128,5 +128,4 @@ http://cgrant.io/tutorials/go/simple-crud-api-with-go-gin-and-gorm/
     WantedBy=multi-user.target
     Alias=coop.service
 
-[8] https://www.jetbrains.com/go/
-
+[9] https://www.jetbrains.com/go/

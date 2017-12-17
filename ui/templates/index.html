@@ -5,9 +5,7 @@
 
 
 <img src="{{ .videoUrl }}"> <br />
-Door: {{ .doorStatus }} <br />
-Temp Outside: {{ .tempOutside }} <br />
-Temp Inside: {{ .tempInside }} <br />
+Door: {{ .doorStatus }} - Outside: {{ .tempOutside }}F - Inside: {{ .tempInside }}F
 
 <!--Embed the footer.html template at this location-->
 {{ template "footer.html" .}}

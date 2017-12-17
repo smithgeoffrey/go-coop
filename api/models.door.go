@@ -14,10 +14,10 @@ func (d *Door) Get() {
 	d.UpSensor = config.MOCK_DOOR_UP_SENSOR
 
 	if d.DownSensor && !(d.UpSensor) {
-		d.Status = "down"
+		d.Status = "Down"
 	} else if d.UpSensor && !(d.DownSensor) {
-		d.Status = "up"
+		d.Status = "Up"
 	} else {
-		d.Status = "error"
+		d.Status = "Jam"
 	}
 }
