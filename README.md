@@ -13,6 +13,10 @@ Avoiding software was nice: no bugs or releases, no patching or upgrades. I hook
 
 Here's a parts list. [2]
 
+### Books
+
+My first was `The Go Programming Language` by Donovan and Kernighan.  A year or so later I added `Go in Practice` by Butcher & Farina.
+
 ### Design
 
 I loosely followed some tutorials on webapps using go/gin. [3]  I wanted just a few basics:
@@ -28,7 +32,7 @@ I loosely followed some tutorials on webapps using go/gin. [3]  I wanted just a 
     - play with continuously building/testing the app
     
     DATABASE
-    - run postgres
+    - run postgres. [6]
     - use GORM to interact with it (http://jinzhu.me/gorm/)
     
     UI
@@ -40,10 +44,6 @@ I loosely followed some tutorials on webapps using go/gin. [3]  I wanted just a 
     API
     - keep API as a top-level package
     - json
-
-### Database
-
-I wanted to have postgres running on the pi, available for the go app.  Here are the steps that did that for me. [6] From my laptop, using the IDE, I connected to postgres running on the pi.
 
 ### Project Setup
 
