@@ -1,4 +1,4 @@
-# Chicken Coop Automation in Go
+# Chicken Coop Automation with Docker and Go
 
 ### Overview
 
@@ -15,7 +15,10 @@ Here's a parts list. [2]
 
 ### Books
 
-My first was `The Go Programming Language` by Donovan and Kernighan.  A year or so later I added `Go in Practice` by Butcher & Farina.
+In order of my getting them:
+
+- `The Go Programming Language` by Donovan and Kernighan
+- `Go in Practice` by Butcher & Farina
 
 ### Design
 
