@@ -2,7 +2,9 @@
 
 ### Overview
 
-I had been looking for a real-world project to help me learn docker and use go.  I recently added a chicken coop at my house. It has a 12-inch door allowing access to an enclosed run during the day, while closing them up in the coop at night. Manually setting the door each morning and night was a chore, so I automated it with hardware. [1]
+I had been playing with go a little, and I knew almost nothing about docker.  I saw opportunity to combine the two as a good fit.  I was looking for a real-world project to help me learn docker and use go.
+
+I recently added a chicken coop at my house. It has a 12-inch door allowing access to an enclosed run during the day, while closing them up in the coop at night. Manually setting the door each morning and night was a chore, so I automated it with hardware. [1]
 
 Avoiding software was nice: no bugs or releases, no patching or upgrades. I hooked a few things together, and the door just does its thing.  But I wanted to remotely verify coop status, particularly in the winter. I had a network camera lying around from a past project. All I needed was to add a raspberry pi and a couple types of sensors.
 
@@ -10,6 +12,9 @@ Avoiding software was nice: no bugs or releases, no patching or upgrades. I hook
 - is the door really up or down as expected
 - what are the temps outside versus inside the coop
 - a live video stream of the run, where the birds spend nearly all of their awake time (when not freeranging in the backyard on weekends)
+- build the app into a binary and run it in a container
+- run another container that serves a resource consumed by the app, maybe a database
+- try to pick up knowledge along the way regarding inter-container networking, shared storage, etc. 
 
 Here's a parts list. [2]
 
@@ -19,7 +24,7 @@ In order of my getting them:
 
 - `The Go Programming Language` by Donovan and Kernighan
 - `Go in Practice` by Butcher & Farina
-- add a docker book
+- `My First Docker Book`
 
 ### Design
 
