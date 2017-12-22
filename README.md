@@ -2,9 +2,9 @@
 
 ### Overview
 
-I had been looking for a real-world project to help me learn go.  I recently added a chicken coop at my house. It has a 12-inch door allowing access to an enclosed run during the day, while closing them up in the coop at night. Manually setting the door each morning and night was a chore, so I automated it with hardware. [1]
+I had been looking for a real-world project to help me learn docker and use go.  I recently added a chicken coop at my house. It has a 12-inch door allowing access to an enclosed run during the day, while closing them up in the coop at night. Manually setting the door each morning and night was a chore, so I automated it with hardware. [1]
 
-Avoiding software was nice: no bugs or releases, no patching or upgrades. I hooked a few things together, and the door just does its thing.  But I wanted to remotely verify coop status, particularly in the winter. I had a network camera lying around from a past project. All I needed was to add a raspberry pi and a couple types of sensors. 
+Avoiding software was nice: no bugs or releases, no patching or upgrades. I hooked a few things together, and the door just does its thing.  But I wanted to remotely verify coop status, particularly in the winter. I had a network camera lying around from a past project. All I needed was to add a raspberry pi and a couple types of sensors.
 
 - install go on the pi and serve a webapp displaying coop sensors and video
 - is the door really up or down as expected
@@ -19,6 +19,7 @@ In order of my getting them:
 
 - `The Go Programming Language` by Donovan and Kernighan
 - `Go in Practice` by Butcher & Farina
+- add a docker book
 
 ### Design
 
@@ -54,7 +55,9 @@ I loosely followed:
 
 - (organization) https://golang.org/doc/code.html#Organization 
 - (vendoring) http://lucasfcosta.com/2017/02/07/Understanding-Go-Dependency-Management.html and https://github.com/golang/dep
+# TODO: add some docker forums here
 
+# TODO: add docker install here
 On the raspberry pi, I install go at /usr/local/go but you could put it anywhere. Just download the `arm` version and unzip it there. That is GOROOT, not to be confused with GOPATH.  GOPATH sets your `workspace` having three subdirs `bin`, `pkg`, `src`, with your code under `src`. You also want to add the GOROOT binary to your PATH so that you can run `go <options>` at the command line.  Here's my bashrc for all of this. [7]
 
 The top-level config/ sets environment variables consumed by a startup script for the service in systemd that I created. [8]
