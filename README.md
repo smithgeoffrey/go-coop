@@ -41,8 +41,8 @@ I loosely followed some tutorials on webapps using go/gin. [3]  I wanted just a 
     - play with continuously building/testing the app
     
     DATABASE
-    - run postgres. [6]
-    - use GORM to interact with it (http://jinzhu.me/gorm/)
+    - run postgres [6]
+    - use GORM to interact with it (http://jinzhu.me/gorm)
     
     UI
     - keep UI as a top-level package
@@ -60,12 +60,11 @@ I loosely followed:
 
 - (organization) https://golang.org/doc/code.html#Organization 
 - (vendoring) http://lucasfcosta.com/2017/02/07/Understanding-Go-Dependency-Management.html and https://github.com/golang/dep
-# TODO: add some docker forums here
+- (docker) add some docker forums here
 
-# TODO: add docker install here
-On the raspberry pi, I install go at /usr/local/go but you could put it anywhere. Just download the `arm` version and unzip it there. That is GOROOT, not to be confused with GOPATH.  GOPATH sets your `workspace` having three subdirs `bin`, `pkg`, `src`, with your code under `src`. You also want to add the GOROOT binary to your PATH so that you can run `go <options>` at the command line.  Here's my bashrc for all of this. [7]
+On the raspberry pi, I install go at /usr/local/go but you could put it anywhere. Just download the `arm` version and unzip it there. That is GOROOT, not to be confused with GOPATH.  GOPATH sets your `workspace` having three subdirs `bin`, `pkg`, `src`, with your code under `src`. You also want to add the GOROOT binary to your PATH so that you can run `go <options>` at the command line.  Here's my bashrc for all of this. [7] The top-level config/ sets environment variables consumed by a startup script for the service in systemd that I created. [8]
 
-The top-level config/ sets environment variables consumed by a startup script for the service in systemd that I created. [8]
+<insert docker install here>
 
 I used an IDE called GoLand. [9] I developed on my laptop and pushed to the pi over many iterations.
 

@@ -16,12 +16,14 @@ func GetDoor(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"UpSensor": door.UpSensor,
 		"DownSensor": door.DownSensor,
-		"Status": door.Status})
+		"Status": door.Status,
+	})
 }
 
 func GetTemp(c *gin.Context) {
 	temp.Get()
 	c.JSON(http.StatusOK, gin.H{
 		"InsideSensor":  temp.InsideSensor,
-		"OutsideSensor": temp.OutsideSensor})
+		"OutsideSensor": temp.OutsideSensor,
+	})
 }
