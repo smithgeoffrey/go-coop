@@ -2,7 +2,8 @@ package ui
 
 import (
     "encoding/json"
-	"net/http"
+	"fmt"
+    "net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/smithgeoffrey/go-coop/config"
@@ -16,13 +17,14 @@ func Home(c *gin.Context) {
 
 	response, err := http.Get(config.TEMP_URL)
 	if err != nil {
-		panic(err.Error())
+		temperature.OutsideSensor = fmt.Sprintf("Error: %s", err)
+		temperature.InsideSensor = fmt.Sprintf("Error: %s", err)
 	}
 	json.NewDecoder(response.Body).Decode(&temperature)
 
 	response, err = http.Get(config.DOOR_URL)
 	if err != nil {
-		panic(err.Error())
+		door.Status = fmt.Sprintf("Error: %s", err)
 	}
 	json.NewDecoder(response.Body).Decode(&door)
 
@@ -31,6 +33,6 @@ func Home(c *gin.Context) {
 		"videoUrl": config.VIDEO_URL,
 		"doorStatus": door.Status,
 		"tempOutside": temperature.OutsideSensor,
-		"tempInside": temperature.InsideSensor })
-
+		"tempInside": temperature.InsideSensor,
+	})
 }

@@ -1,20 +1,20 @@
-# Chicken Coop Automation with Docker and Go
+# Chicken Coop Automation with Jenkins, Docker & Go
 
 ### Overview
 
-I had been playing with go a little, and I knew almost nothing about docker.  I saw opportunity to combine the two as a good fit.  I was looking for a real-world project to help me learn docker and use go.
+I had been playing with go but hadn't done much with it.  I knew almost nothing about docker but wanted to.  I wanted to develop on my laptop but have the deploys go to a raspberry pi.  And I wanted Jenkins (not me) to do the work, an iterative process of builds, tests and deploys to the pi. 
 
-I recently added a chicken coop at my house. It has a 12-inch door allowing access to an enclosed run during the day, while closing them up in the coop at night. Manually setting the door each morning and night was a chore, so I automated it with hardware. [1]
+I recently added a chicken coop at my house. It has a 12-inch door allowing access to an enclosed run during the day, while closing them up in the coop at night. Manually setting the door each morning and night was a chore, so I automated it with hardware. [1]  
 
-Avoiding software was nice: no bugs or releases, no patching or upgrades. I hooked a few things together, and the door just does its thing.  But I wanted to remotely verify coop status, particularly in the winter. I had a network camera lying around from a past project. All I needed was to add a raspberry pi and a couple types of sensors.
+Avoiding software was nice: no bugs or releases, no patching or upgrades. I hooked a few things together, and the door just does its thing.  But I wanted to remotely verify coop status, particularly in the winter:
 
 - install go on the pi and serve a webapp displaying coop sensors and video
-- is the door really up or down as expected
-- what are the temps outside versus inside the coop
-- a live video stream of the run, where the birds spend nearly all of their awake time (when not freeranging in the backyard on weekends)
+  - is the door really up or down as expected
+  - what are the temps outside versus inside the coop
+  - a live video stream of the run, where the birds spend nearly all of their awake time (when not freeranging in the backyard on weekends)
 - build the app into a binary and run it in a container
 - run another container that serves a resource consumed by the app, maybe a database
-- try to pick up knowledge along the way regarding inter-container networking, shared storage, etc. 
+- have jenkins on my laptop do all the work, including builds, testing and deploys to the pi
 
 Here's a parts list. [2]
 
@@ -26,7 +26,7 @@ In order of my getting them:
 - `Go in Practice` by Butcher & Farina
 - `My First Docker Book`
 
-### Design
+### App Design
 
 I loosely followed some tutorials on webapps using go/gin. [3]  I wanted just a few basics:
 
@@ -54,19 +54,21 @@ I loosely followed some tutorials on webapps using go/gin. [3]  I wanted just a 
     - keep API as a top-level package
     - json
 
-### Project Setup
-
 I loosely followed:
 
 - (organization) https://golang.org/doc/code.html#Organization 
 - (vendoring) http://lucasfcosta.com/2017/02/07/Understanding-Go-Dependency-Management.html and https://github.com/golang/dep
-- (docker) add some docker forums here
-
-On the raspberry pi, I install go at /usr/local/go but you could put it anywhere. Just download the `arm` version and unzip it there. That is GOROOT, not to be confused with GOPATH.  GOPATH sets your `workspace` having three subdirs `bin`, `pkg`, `src`, with your code under `src`. You also want to add the GOROOT binary to your PATH so that you can run `go <options>` at the command line.  Here's my bashrc for all of this. [7] The top-level config/ sets environment variables consumed by a startup script for the service in systemd that I created. [8]
-
-<insert docker install here>
 
 I used an IDE called GoLand. [9] I developed on my laptop and pushed to the pi over many iterations.
+
+### Docker Design
+
+- (docker) add some docker forums here
+That is more go side.  Docker side, I installed via `https://store.docker.com/editions/community/docker-ce-desktop-mac` (laptop) and `curl -sSL https://get.docker.com | sh` (rpi). 
+
+### Raspberry Pi Setup
+
+On the raspberry pi, I install go at /usr/local/go but you could put it anywhere. Just download the `arm` version and unzip it there. That is GOROOT, not to be confused with GOPATH.  GOPATH sets your `workspace` having three subdirs `bin`, `pkg`, `src`, with your code under `src`. You also want to add the GOROOT binary to your PATH so that you can run `go <options>` at the command line.  Here's my bashrc for all of this. [7] The top-level config/ sets environment variables consumed by a startup script for the service in systemd that I created. [8]
 
 ### References
 
@@ -90,7 +92,7 @@ Door position sensors: https://www.amazon.com/gp/product/B0009SUF08/ref=oh_aui_d
 
 Temperature sensors: https://www.amazon.com/gp/product/B01IOK40DA/ref=oh_aui_detailpage_o02_s01?ie=UTF8&psc=1
 
-[3] https://github.com/gin-gonic/gin
+[3] I started with https://github.com/gin-gonic/gin.  Then I found three articles, here.  I barely finished browsing the first before I just started tinkering with my setup.  I do hope to return to these for things like examples of auth, DB conns and testing.  
 https://semaphoreci.com/community/tutorials/building-go-web-applications-and-microservices-using-gin
 https://semaphoreci.com/community/tutorials/test-driven-development-of-go-web-applications-with-gin
 http://cgrant.io/tutorials/go/simple-crud-api-with-go-gin-and-gorm/
@@ -116,14 +118,16 @@ http://cgrant.io/tutorials/go/simple-crud-api-with-go-gin-and-gorm/
     > grant all privileges on database coop to youradminusernameofchoice;
     > \q
 
-[7] Bashrc:
+[7] https://www.jetbrains.com/go/
+
+[8] Bashrc:
 
     export GOROOT=/usr/local/go
     export GOPATH=$HOME
     mkdir -p $GOPATH/bin $GOPATH/pkg $GOPATH/src 
     export PATH+=:$GOROOT/bin
 
-[8] It lives at /etc/systemd/system/coop.service as shown.  It lets me do `systemctl start coop`:
+[9] It lives at /etc/systemd/system/coop.service as shown.  It lets me do `systemctl start coop`:
     
     [Unit]
     Description=Golang Chicken Coop Web Service
@@ -137,5 +141,3 @@ http://cgrant.io/tutorials/go/simple-crud-api-with-go-gin-and-gorm/
     [Install]
     WantedBy=multi-user.target
     Alias=coop.service
-
-[9] https://www.jetbrains.com/go/

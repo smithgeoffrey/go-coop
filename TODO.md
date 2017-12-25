@@ -8,7 +8,7 @@ Panics unlike errors should be used sparingly and with intention.  Here I'll sta
 
 I'm learning that Go unlike other languages doesn't place much importance on the overhead of custom error types: most errors have no special attributes that would be better conveyed by a special error type. This jives with some of my past experiences, and until I stumble on cause to expand, I'll just use the std lib's base error type.
 
-So far I'm ignoring errors largely. Try modifying everything to return multiple values: result, err.  
+So far I'm ignoring errors largely. Try modifying everything to return multiple values: result, err.
 
 One guideline I've seen and want to try is don't return nil on the result when there's an error, instead return if possible the empty value of the type expected.  That enables users of your library to streamline their use of your lib to do things like this pseudo code:
 
