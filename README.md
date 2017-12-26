@@ -31,13 +31,13 @@ In order of my getting them:
 
 ### Raspberry Pi Setup
 
-On the raspberry pi, I installed jenkins by following http://ifahrentholz.de/2017/setup-jenkins-on-raspberry/ mostly:
+On the raspberry pi, I installed jenkins as follows.  Make sure you have java8 installed first; my pi already had 7 and 8 arm versions of jre available, e.g., `ln -s /usr/lib/jvm/jdk-8-oracle-arm32-vfp-hflt/bin/java /etc/alternatives/java`.
 
     sudo wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
-    sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
+    sudo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
     sudo apt-get update
     sudo apt-get install jenkins
-    vi /etc/default/jenkins // change these
+    vi /etc/default/jenkins # change the listening port
       HTTP_HOST=0.0.0.0
       AJP_HOST=0.0.0.0
     systemctl restart jenkins
