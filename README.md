@@ -2,21 +2,24 @@
 
 ### Overview
 
-I had been playing with go but hadn't done much with it.  I knew almost nothing about docker but wanted to.  I wanted to develop on my laptop but have the deploys go to a raspberry pi.  And I wanted Jenkins (not me) to do the work, an iterative process of builds, tests and deploys to the pi. 
+I recently added a chicken coop at my house. It has a 12-inch door allowing access to an enclosed run during the day. Manually setting the door each morning and night was a chore, so I automated it with hardware. [1]  Avoiding software was nice: no bugs or releases, no patching or upgrades. I hooked a few things together, and the door just does its thing.  But I wanted to remotely verify coop status, particularly in the winter:
 
-I recently added a chicken coop at my house. It has a 12-inch door allowing access to an enclosed run during the day, while closing them up in the coop at night. Manually setting the door each morning and night was a chore, so I automated it with hardware. [1]  
-
-Avoiding software was nice: no bugs or releases, no patching or upgrades. I hooked a few things together, and the door just does its thing.  But I wanted to remotely verify coop status, particularly in the winter:
-
-- install go on the pi and serve a webapp displaying coop sensors and video
   - is the door really up or down as expected
   - what are the temps outside versus inside the coop
-  - a live video stream of the run, where the birds spend nearly all of their awake time (when not freeranging in the backyard on weekends)
-- build the app into a binary and run it in a container
-- run another container that serves a resource consumed by the app, maybe a database
-- have jenkins on my laptop do all the work, including builds, testing and deploys to the pi
+  - a live video stream of the run, where the birds spend nearly all of their awake time (when not free ranging in the backyard on weekends)
 
-Here's a parts list. [2]
+For more hardware, just add a raspberry pi, a couple types of sensors and a network camera. [2]  For software:
+
+- develop the app in golang on my laptop and push to version control
+  - api 
+  - ui
+- jenkins running on the raspberry pi 
+  - watches commits
+  - builds the app into a go binary
+  - builds a docker container running the binary
+  - deploys the container to the pi
+- run a separate container on the raspberry pi 
+  - serve postgres which the app consumes
 
 ### Books
 
@@ -26,7 +29,25 @@ In order of my getting them:
 - `Go in Practice` by Butcher & Farina
 - `My First Docker Book`
 
-### App Design
+### Raspberry Pi Setup
+
+On the raspberry pi, I installed jenkins by following http://ifahrentholz.de/2017/setup-jenkins-on-raspberry/ mostly:
+
+    sudo wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
+    sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
+    sudo apt-get update
+    sudo apt-get install jenkins
+    vi /etc/default/jenkins // change these
+      HTTP_HOST=0.0.0.0
+      AJP_HOST=0.0.0.0
+    systemctl restart jenkins
+    <do setup at http://ip:8080>
+
+I installed docker via `https://store.docker.com/editions/community/docker-ce-desktop-mac` (laptop) and `curl -sSL https://get.docker.com | sh` (raspberry pi).
+
+I installed go at /usr/local/go but you could put it anywhere. Just download the `arm` version and unzip it there. That is GOROOT, not to be confused with GOPATH.  GOPATH sets your `workspace` having three subdirs `bin`, `pkg`, `src`, with your code under `src`. You also want to add the GOROOT binary to your PATH so that you can run `go <options>` at the command line.  Here's my bashrc for all of this. [7] The top-level config/ sets environment variables consumed by a startup script for the service in systemd that I created. [8]
+
+### App
 
 I loosely followed some tutorials on webapps using go/gin. [3]  I wanted just a few basics:
 
@@ -61,15 +82,6 @@ I loosely followed:
 
 I used an IDE called GoLand. [9] I developed on my laptop and pushed to the pi over many iterations.
 
-### Docker Design
-
-- (docker) add some docker forums here
-That is more go side.  Docker side, I installed via `https://store.docker.com/editions/community/docker-ce-desktop-mac` (laptop) and `curl -sSL https://get.docker.com | sh` (rpi). 
-
-### Raspberry Pi Setup
-
-On the raspberry pi, I install go at /usr/local/go but you could put it anywhere. Just download the `arm` version and unzip it there. That is GOROOT, not to be confused with GOPATH.  GOPATH sets your `workspace` having three subdirs `bin`, `pkg`, `src`, with your code under `src`. You also want to add the GOROOT binary to your PATH so that you can run `go <options>` at the command line.  Here's my bashrc for all of this. [7] The top-level config/ sets environment variables consumed by a startup script for the service in systemd that I created. [8]
-
 ### References
 
 [1] It's a 12 volt system on a marine battery. A standard batter maintainer charges the battery that powers a 12-volt relay that powers a linear actuator that moves the door.  A solar sensor acts as input to the relay, and the relay flips the polarity of its output when triggered.  When the sun rises then sets, the door vertically slides open then shut.  Here's a parts list.
@@ -101,7 +113,7 @@ http://cgrant.io/tutorials/go/simple-crud-api-with-go-gin-and-gorm/
 
 [5] See https://lincolnloop.com/blog/debugging-go-code/.  I want to try delv versus godebug at https://github.com/derekparker/delve and https://github.com/mailgun/godebug, respectively, and whatever my IDE has if anything.
 
-[6] Install postgres on the pi:
+[6] I installed postgres on the pi via:
 
     apt-get update && apt-get install postgresql-9.4
     echo "host  all  all  172.16.1.0/24 md5" >> /etc/postgresql/9.4/main/pg_hba.conf
@@ -117,6 +129,10 @@ http://cgrant.io/tutorials/go/simple-crud-api-with-go-gin-and-gorm/
     > grant all privileges on database coop to coop;
     > grant all privileges on database coop to youradminusernameofchoice;
     > \q
+
+But here I want to try running it in a container.  I did that via:
+
+    insert
 
 [7] https://www.jetbrains.com/go/
 

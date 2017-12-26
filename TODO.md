@@ -12,7 +12,7 @@ So far I'm ignoring errors largely. Try modifying everything to return multiple 
 
 One guideline I've seen and want to try is don't return nil on the result when there's an error, instead return if possible the empty value of the type expected.  That enables users of your library to streamline their use of your lib to do things like this pseudo code:
 
-    ## geoff package that returns and error
+    ## geoff package that returns an error
     import errors
     
     func Chickens(arg1) (string, error) {
