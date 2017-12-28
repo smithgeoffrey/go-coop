@@ -15,5 +15,5 @@ func main() {
 	// from ~/routes.go
 	initializeRoutes(router)
 
-	router.Run(":8080")
+	router.Run(":8081")
 }
