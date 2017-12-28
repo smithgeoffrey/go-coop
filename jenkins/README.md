@@ -1,5 +1,11 @@
-# Jenkins
+# Jenkins CI Pipeline for Running Go inside Docker
 
-### foo
+### Overview
 
-bar
+We want a Jenkins pipeline for go/docker.
+
+### Breadcrumbs
+
+- go get https://github.com/golang/dep
+- go get <packages>
+- cd $GOPATH/src/project && dep ensure
