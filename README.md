@@ -43,7 +43,10 @@ On the raspberry pi, I installed jenkins as follows.  Make sure you have java8 i
     systemctl restart jenkins
     <do setup at http://ip:8080>
 
-I installed docker via `https://store.docker.com/editions/community/docker-ce-desktop-mac` (laptop) and `curl -sSL https://get.docker.com | sh` (raspberry pi).  See ~/docker/README.md for more.
+I installed docker via `https://store.docker.com/editions/community/docker-ce-desktop-mac` (laptop) and `curl -sSL https://get.docker.com | sh` (raspberry pi).  I had to edit systemd for the docker service so the Docker REST API socket would come up listening, as shown. See ~/docker/README.md for more.
+
+    #ExecStart=/usr/bin/dockerd -H fd://
+    ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock
 
 I installed go at /usr/local/go but you could put it anywhere. Just download the `arm` version and unzip it there. That is GOROOT, not to be confused with GOPATH.  GOPATH sets your `workspace` having three subdirs `bin`, `pkg`, `src`, with your code under `src`. You also want to add the GOROOT binary to your PATH so that you can run `go <options>` at the command line.  Here's my bashrc for all of this. [4] The top-level config/ sets environment variables consumed by a startup script for the service in systemd that I created. [5]
 
@@ -82,7 +85,7 @@ Even more loosely, I browsed some tutorials on webapps using go/gin. [7]  I want
 
 ### References
 
-[1] It's a 12 volt system on a marine battery. A standard batter maintainer charges the battery that powers a 12-volt relay that powers a linear actuator that moves the door.  A solar sensor acts as input to the relay, and the relay flips the polarity of its output when triggered.  When the sun rises then sets, the door vertically slides open then shut.  Here's a parts list.
+[1] It's a 12 volt system on a marine battery. A standard battery maintainer charges the battery that powers a 12-volt relay that powers a linear actuator that moves the door.  A solar sensor acts as input to the relay, and the relay flips the polarity of its output when triggered.  When the sun rises then sets, the door vertically slides open then shut.  Here's a parts list.
 
 Battery: https://shop.hamiltonmarine.com/products/battery-deep-cycle--80-amp-hours-mca-500-35925.html
 
