@@ -2,13 +2,13 @@
 
 ### Overview
 
-I recently added a chicken coop at my house. It has a 12-inch door allowing access to an enclosed run during the day. Manually setting the door each morning and night was a chore, so I automated it with hardware. [1]  Avoiding software was nice: no bugs or releases, no patching or upgrades. I hooked a few things together, and the door just does its thing.  But I wanted to remotely verify coop status, particularly in the winter:
+I recently added a chicken coop at my house. It has a 12-inch door allowing access to an enclosed run during the day. Manually setting the door each morning and night was a chore, so I automated it with hardware. [1]  Avoiding software was nice: no bugs or releases, no patching or upgrades. I hooked a few things together, and the door just does its thing.  But I wanted to remotely verify coop status, particularly in the winter.  Just add a raspberry pi, a couple types of sensors and a network camera: [2]
 
   - is the door really up or down as expected
   - what are the temps outside versus inside the coop
   - a live video stream of the run, where the birds spend nearly all of their awake time (when not free ranging in the backyard on weekends)
 
-For more hardware, just add a raspberry pi, a couple types of sensors and a network camera. [2]  For software:
+For software:
 
 - develop the app in golang on my laptop and push to version control
   - api 
@@ -29,9 +29,9 @@ In order of my getting them:
 - `Go in Practice` by Butcher & Farina
 - `My First Docker Book`
 
-### Raspberry Pi Setup
+### Raspberry Pi
 
-On the raspberry pi, I installed jenkins as follows.  Make sure you have java8 installed first; my pi already had 7 and 8 arm versions of jre available, e.g., `ln -s /usr/lib/jvm/jdk-8-oracle-arm32-vfp-hflt/bin/java /etc/alternatives/java`.  Jenkins couldn't fetch plugins throwing a java trace relating to an SSL error, until I changed the update URL from https to http at `Manage Plugins > Advanced tab > Update Site URL`.  I added a few plugins. [3]  See ~/jenkins/README.md for more.
+I installed jenkins as follows.  Make sure you have java8 installed first; my pi already had 7 and 8 arm versions of jre available, e.g., `ln -s /usr/lib/jvm/jdk-8-oracle-arm32-vfp-hflt/bin/java /etc/alternatives/java`.  Jenkins couldn't fetch plugins throwing a java trace relating to an SSL error, until I changed the update URL from https to http at `Manage Plugins > Advanced tab > Update Site URL`.  I added a few plugins. [3]  See ~/jenkins/README.md for more.
 
     sudo wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
     sudo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'

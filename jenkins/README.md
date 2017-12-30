@@ -2,11 +2,11 @@
 
 ### Overview
 
-We want a Jenkins pipeline for running a go binary in a docker container.  Possible use case is for deploying microservices in a small, secure way.
+I want a Jenkins pipeline for running a go binary in a docker container.
 
 ### Config
 
-Eventually I'll land on some steady state and can include the job's .xml file.  For now, here's a list of the basic setup in a job I'm running:
+Here's a list of the basic setup in a job I'm running:
 
     SOURCE CODE MANAGEMENT
         
@@ -30,14 +30,35 @@ Eventually I'll land on some steady state and can include the job's .xml file.  
     BUILD
         
         EXECUTE SHELL
-        cd $WORKSPACE && go get -u github.com/golang/dep/...
-        
+        # prep a docker buildir having static content for the app
+        mkdir $WORKSPACE/docker && \
+        cp -a $WORKSPACE/src/github.com/smithgeoffrey/go-coop/ui $WORKSPACE/docker && \
+        rm -f $WORKSPACE/docker/ui/*.*
+
         EXECUTE SHELL
-        cd $WORKSPACE/src/github.com/smithgeoffrey/go-coop && dep init && dep ensure
-        
+        # build the app binary and put it in the docker buildir
+        cd $WORKSPACE/src/github.com/smithgeoffrey/go-coop && \
+        go get -u github.com/golang/dep/... && \
+        dep init && dep ensure && \
+        go build *.go && \
+        mv main $WORKSPACE/docker/binary
+    
         EXECUTE SHELL
-        cd $WORKSPACE && go build src/github.com/smithgeoffrey/go-coop/*.go && mv main app
-        
+        # create the dockerfile
+        cd $WORKSPACE/docker && \
+        cat > Dockerfile << EOF
+        FROM golang:alpine
+        WORKDIR /app
+        COPY ./binary /app/
+        COPY ./ui /app/
+        ENTRYPOINT ["./binary"]
+        EOF        
+    
+        EXECUTE DOCKER COMMAND
+        Docker command: Create/build image
+        Build context folder: $WORKSPACE/docker
+        Tag of the resulting docker image: $BUILD_NUMBER
+            
     POST-BUILD ACTIONS
         
         SLACK NOTIFICATIONS
