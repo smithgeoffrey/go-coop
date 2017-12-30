@@ -2,25 +2,27 @@
 
 ### The Pipeline
 
-- jenkins running on the raspberry pi 
+- jenkins running on a raspberry pi 
   - clones an app from version control
-  - builds the app into a go binary
+  - builds the app into a binary
   - builds a docker image running the binary
   - tests the docker image
   - publishes the image
   - deploys the image as a container running on the pi
 - have jenkins poll version control so the process is automated on every commit
 
-Once I reach steady state here, add another container to the mix to figure out inter-container workings:
+Once I reach steady state, add another container to the mix to get a handle on inter-container workings:
 
-- run another container on the raspberry pi 
+- run another container on the pi 
   - serve postgres which the app consumes
 
 ### What App?
 
-Jenkins and Docker are great but the underlying app they manage is the whole point: get the app into the ci pipeline and deploy it -- over and over and over.  I'd been wanting to do more go, which seemed a good fit here: it compiles into a small binary; it should be able to build its dependencies into the binary; and I like it.  It seems to have promise as a major language for the next decade, with tendrals in the ops and dev spaces.  
+Jenkins and Docker are great but the underlying app they manage is the whole point: get the app into the ci pipeline and deploy it -- repeat infinitely.  
 
-So the app would be in go, but what would it do? I recently added a chicken coop at my house. It has a 12-inch door allowing access to an enclosed run during the day. Manually setting the door each morning and night was a chore, so I automated it with hardware. [1]  Avoiding software was nice: no bugs or releases, no patching or upgrades. I hooked a few things together, and the door just does its thing.  But I wanted to remotely verify coop status, particularly in the winter.  Just add a raspberry pi, a couple types of sensors and a network camera: [2]
+I'd been wanting to do more go, which seemed a good fit here: it's a small, modern, self-contained ecosystem that compiles into a fast binary including dependencies, for ease of deployment and maintenance.  I've used it a little and I like it.  It seems to have promise as a leading language for the next decade, with tendrals in the ops and dev spaces.
+
+But what would the go app do? I recently added a chicken coop at my house. It has a 12-inch door allowing access to an enclosed run during the day. Manually setting the door each morning and night was a chore, so I automated it with hardware. [1]  Avoiding software was nice: no bugs or releases, no patching or upgrades. I hooked a few things together, and the door just does its thing.  But I wanted to remotely verify coop status, particularly in the winter.  Just add a raspberry pi, a couple types of sensors and a network camera: [2]
 
   - is the door really up or down as expected
   - what are the temps outside versus inside the coop
