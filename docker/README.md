@@ -4,25 +4,46 @@
 
 - https://blog.iron.io/an-easier-way-to-create-tiny-golang-docker-images/
 
-With `docker build` create a versioned docker image from a Dockerfile:
+It took me a while to get anything working at all, but I landed on a Dockerfile that let me hit the app:
 
-    cd <path to Dockerfile>
-    docker build . -t coop:1
+    # create the dockerfile
+    cd $WORKSPACE/docker && \
+    cat > Dockerfile << EOF
+    FROM golang:alpine
+    MAINTAINER Geoff Smith "smithgeoffrey123@gmail.com"
+    EXPOSE 8081
+    
+    WORKDIR /app
+    COPY gobinary .
+    ADD ui/ ./ui/
+    
+    ENV PORT=8081
+    CMD ["/app/gobinary"]
+    EOF
 
-In jenkins w/ the plugin I was using, I tried using `coop:$BUILD_NUMBER` as the plugin option called `Tag of the resulting docker image:`. Verify the image registered with docker:
+Build the image manually with `docker build . -t coop` or let jenkins do same by setting `coop` as the (docker-build) plugin option called `Tag of the resulting docker image:`. After build, verify the image is inventoried via `docker images | grep coop`.  I liked to verify on a container spawned from the image, in an interactive shell; note that it dumps me to the `workdir` immediately:
+ 
+    docker run --rm -it coop sh
 
-    docker images | grep coop
-   
-It looks like I could create a container from that image using something like:
+    /app # ls
+    gobinary  ui
+    /app#
+
+Everything looks ok but the app wouldn't run:
+
+    /app # ./gobinary 
+    sh: ./gobinary: not found
+
+It turns out go compiles with glibc but alpine with muslc, by default.  So I have a little homework how to patch the two so a go binary runs like usual on alpine.  Maybe I'll just avoid alpine for the moment.
+  
+Run the image not interactively:
  
     docker run -it -p 8081:8081 coop 
 
-But it looks like the jenkins plugin already created a container:
+Also, try inspecting the image:
 
-    docker container ls --all | grep coop
-    docker container start <container id>
+    docker inspect 10d765f63e2c
 
-Whichever way I try to run it, the container status is `Exited` and throws that it couldn't find the binary. So my Dockerfile wasn't plumbed right I think.
 
 ### Troubleshoot Container Startup w/ Logs
 
