@@ -18,17 +18,18 @@ Once I reach steady state here, add another container to the mix to figure out i
 
 ### What App?
 
-Jenkins and Docker are great but the underlying app they manage is the whole point: get the app into the ci pipeline and deploy it -- over and over and over.  I'd been wanting to do more go, which seemed a good fit here: it compiles into a small binary; it should be able to build its dependencies into the binary; and I like it.  It seems to have promise as a major language for the next decade, with tendrals in the ops and dev spaces.
+Jenkins and Docker are great but the underlying app they manage is the whole point: get the app into the ci pipeline and deploy it -- over and over and over.  I'd been wanting to do more go, which seemed a good fit here: it compiles into a small binary; it should be able to build its dependencies into the binary; and I like it.  It seems to have promise as a major language for the next decade, with tendrals in the ops and dev spaces.  
 
-I recently added a chicken coop at my house. It has a 12-inch door allowing access to an enclosed run during the day. Manually setting the door each morning and night was a chore, so I automated it with hardware. [1]  Avoiding software was nice: no bugs or releases, no patching or upgrades. I hooked a few things together, and the door just does its thing.  But I wanted to remotely verify coop status, particularly in the winter.  Just add a raspberry pi, a couple types of sensors and a network camera: [2]
+So the app would be in go, but what would it do? I recently added a chicken coop at my house. It has a 12-inch door allowing access to an enclosed run during the day. Manually setting the door each morning and night was a chore, so I automated it with hardware. [1]  Avoiding software was nice: no bugs or releases, no patching or upgrades. I hooked a few things together, and the door just does its thing.  But I wanted to remotely verify coop status, particularly in the winter.  Just add a raspberry pi, a couple types of sensors and a network camera: [2]
 
   - is the door really up or down as expected
   - what are the temps outside versus inside the coop
   - a live video stream of the run, where the birds spend nearly all of their awake time (when not free ranging in the backyard on weekends)
 
-So my task became:
+My task:
 
 - develop a go app (api & ui) on my laptop and push to version control
+- from there, let the pipeline do the rest
 
 Here are the go books I've used, in order of my getting them:
 
