@@ -51,6 +51,7 @@ Here's a list of the basic setup in a job I'm running:
         WORKDIR /app
         COPY ./binary /app/
         COPY ./ui /app/
+        EXPOSE 8081
         ENTRYPOINT ["./binary"]
         EOF        
     
