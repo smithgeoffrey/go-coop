@@ -16,9 +16,13 @@ Once I reach steady state, add another container to the mix to get a handle on i
 - run another container on the pi 
   - serve postgres which the app consumes
 
+Once I reach steady state there, add a third container to the group:
+
+- migrate Jenkins from an app on the pi, to a container on the pi
+
 ### What App?
 
-Jenkins and Docker are great but the underlying app they manage is the whole point: get the app into the ci pipeline and deploy it -- repeat infinitely.  
+Jenkins and Docker are great but the underlying app they manage is the whole point: get the app into the pipeline and deploy it -- repeat infinitely.  
 
 I'd been wanting to do more go, which seemed a good fit here: it's a small, modern, self-contained ecosystem that compiles into a fast binary including dependencies, for ease of deployment and maintenance.  I've used it a little and I like it.  It seems to have promise as a leading language for the next decade, with tendrals in the ops and dev spaces.
 
