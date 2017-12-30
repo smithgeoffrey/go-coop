@@ -14,11 +14,17 @@ For software:
   - api 
   - ui
 - jenkins running on the raspberry pi 
-  - watches commits
+  - clones the app from version control
   - builds the app into a go binary
-  - builds a docker container running the binary
-  - deploys the container to the pi
-- run a separate container on the raspberry pi 
+  - builds a docker image running the binary
+  - tests the docker image
+  - publishes the image
+  - deploys the image as a container running on the pi
+
+If I get that far, add another container to the mix:
+
+- inter-container processing
+  - run another container on the raspberry pi 
   - serve postgres which the app consumes
 
 ### Books
