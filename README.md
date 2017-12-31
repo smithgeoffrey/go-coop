@@ -2,6 +2,8 @@
 
 ### The Pipeline
 
+We want to build a pipeline as the primary goal, that takes as input an app in version control.  Though I'm using raspberry pi as the platform on which the pipeline runs, that's incidental to the primary goal, a convenience for my implementing this in a home lab.  Any platform could run the pipeline.  Here's the basic plan:
+
 - jenkins running on a raspberry pi 
   - clones an app from version control
   - builds the app into a binary
@@ -9,7 +11,9 @@
   - tests the docker image
   - publishes the image
   - deploys the image as a container running on the pi
-- have jenkins poll version control so the process is automated on every commit
+- jenkins polls version control so the process is automated on every commit
+  - I develop the app on my laptop and push to version control
+  - that push to version control is the handoff from me to the pipeline that automates all things thereafter
 
 Once I reach steady state, add another container to the mix to get a handle on inter-container workings:
 
@@ -30,15 +34,12 @@ What would the app do? I recently added a chicken coop at my house. It has a 12-
   - what are the temps outside versus inside the coop
   - a live video stream of the run, where the birds spend nearly all of their awake time (when not free ranging in the backyard on weekends)
 
-My task:
-
-- develop a go app (api & ui) on my laptop and push to version control
-- from there, let the pipeline do the rest
-
 Here are the go books I've used, in order of my getting them:
 
 - `The Go Programming Language` by Donovan and Kernighan
 - `Go in Practice` by Butcher & Farina
+
+Before diving into the app itself, consider setup on the raspberry pi.
 
 ### Raspberry Pi
 
