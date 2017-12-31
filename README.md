@@ -1,30 +1,29 @@
-# Chicken Coop Automation with Jenkins, Docker & Go
+# Bluegreen deploys with Jenkins, Docker & Go
 
 ### The Pipeline
 
-We want to build a pipeline as the primary goal, that takes as input an app in version control.  Though I'm using raspberry pi as the platform on which the pipeline runs, that's incidental to the primary goal, a convenience for my implementing this in a home lab.  Any platform could run the pipeline.  Here's the basic plan:
+A bluegreen-capable pipeline is the primary goal.  Running on a raspberry pi is a nicety for my use case, but it could run anywhere:
 
-- jenkins running on a raspberry pi 
-  - clones an app from version control
-  - builds the app into a binary
-  - builds a docker image running the binary
-  - tests the docker image
-  - publishes the image
-  - deploys the image as a container running on the pi
-- jenkins polls version control so the process is automated on every commit
-  - I develop the app on my laptop and push to version control
-  - that push to version control is the handoff from me to the pipeline that automates all things thereafter
+- jenkins running locally on the pi 
+  - polls version control of an app for each commit
+    - builds app into a binary
+    - builds docker image running the binary
+    - deploys image as cold container in parallel to hot (live) 
+    - tests cold
+    - publishes cold
+    - cuts over traffic to cold
+    - optionally rolls
 
-Once I reach steady state, add another container to the mix to get a handle on inter-container workings:
+Once I reach steady state, add:
+ 
+- a second container on the pi
+  - serves postgres consumed by the app
 
-- run another container on the pi 
-  - serve postgres which the app consumes
+Try a third container:
 
-Once I reach steady state there, add a third container to the group:
+- migrate Jenkins to a container on the pi
 
-- migrate Jenkins from an app on the pi, to a container on the pi
-
-### What App?
+### The App
 
 Jenkins and Docker are great but the underlying app they manage is the whole point.  I'd been wanting to do more go, which seems a good fit here: it's a small, modern, self-contained ecosystem that compiles into a fast binary including dependencies, for ease of deployment and maintenance.  I've used it a little and I like it.  It seems to have promise as a leading language for the next decade, with tendrals in both dev and ops.
 
@@ -41,7 +40,7 @@ Here are the go books I've used, in order of my getting them:
 
 Before diving into the app itself, consider setup on the raspberry pi.
 
-### Raspberry Pi
+### Raspberry Pi Setup
 
 I installed jenkins as follows.  Make sure you have java8 installed first.  My pi already had 7 and 8 arm versions of jre available, e.g., `ln -s /usr/lib/jvm/jdk-8-oracle-arm32-vfp-hflt/bin/java /etc/alternatives/java`.  Jenkins couldn't fetch plugins throwing a java trace relating to an SSL error, until I changed the update URL from https to http at `Manage Plugins > Advanced tab > Update Site URL`.  I added a few plugins. [3]  See ~/jenkins/README.md for more.
 
@@ -62,7 +61,7 @@ I installed docker via `https://store.docker.com/editions/community/docker-ce-de
 
 I installed go at /usr/local/go but you could put it anywhere. Just download the `arm` version and unzip it there. That is GOROOT, not to be confused with GOPATH.  GOPATH sets your `workspace` having three subdirs `bin`, `pkg`, `src`, with your code under `src`. You also want to add the GOROOT binary to your PATH so that you can run `go <options>` at the command line.  Here's my bashrc for all of this. [4] The top-level config/ sets environment variables consumed by a startup script for the service in systemd that I created. [5]
 
-### The Go App
+### The App, Again
 
 I used an IDE called GoLand. [6] I loosely followed:
 
