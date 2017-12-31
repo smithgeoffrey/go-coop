@@ -2,7 +2,7 @@
 
 ### Config
 
-Here's a list of the basic setup in a job I'm running:
+There's some overlap with this ~/jenkins/README.md and ~/docker/README.md, since Jenkins is implementing docker.  The idea is ~/docker shows the path that got to a point that Jenkins could do the docker work, then here, we show the Jenkins config including docker.  Here's a list of the basic setup in a Jenkins job I'm running:
 
     SOURCE CODE MANAGEMENT
         
