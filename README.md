@@ -26,7 +26,7 @@ Once I reach steady state there, add a third container to the group:
 
 ### What App?
 
-Jenkins and Docker are great but the underlying app they manage is the whole point.  I'd been wanting to do more go, which seemed a good fit here: it's a small, modern, self-contained ecosystem that compiles into a fast binary including dependencies, for ease of deployment and maintenance.  I've used it a little and I like it.  It seems to have promise as a leading language for the next decade, with tendrals in both dev and ops.
+Jenkins and Docker are great but the underlying app they manage is the whole point.  I'd been wanting to do more go, which seems a good fit here: it's a small, modern, self-contained ecosystem that compiles into a fast binary including dependencies, for ease of deployment and maintenance.  I've used it a little and I like it.  It seems to have promise as a leading language for the next decade, with tendrals in both dev and ops.
 
 What would the app do? I recently added a chicken coop at my house. It has a 12-inch door allowing access to an enclosed run during the day. Manually setting the door each morning and night was a chore, so I automated it with hardware. [1]  Avoiding software was nice: no bugs or releases, no patching or upgrades. I hooked a few things together, and the door just does its thing.  But I wanted to remotely verify coop status, particularly in the winter.  Just add a raspberry pi, a couple types of sensors and a network camera: [2]
 
@@ -43,7 +43,7 @@ Before diving into the app itself, consider setup on the raspberry pi.
 
 ### Raspberry Pi
 
-I installed jenkins as follows.  Make sure you have java8 installed first; my pi already had 7 and 8 arm versions of jre available, e.g., `ln -s /usr/lib/jvm/jdk-8-oracle-arm32-vfp-hflt/bin/java /etc/alternatives/java`.  Jenkins couldn't fetch plugins throwing a java trace relating to an SSL error, until I changed the update URL from https to http at `Manage Plugins > Advanced tab > Update Site URL`.  I added a few plugins. [3]  See ~/jenkins/README.md for more.
+I installed jenkins as follows.  Make sure you have java8 installed first.  My pi already had 7 and 8 arm versions of jre available, e.g., `ln -s /usr/lib/jvm/jdk-8-oracle-arm32-vfp-hflt/bin/java /etc/alternatives/java`.  Jenkins couldn't fetch plugins throwing a java trace relating to an SSL error, until I changed the update URL from https to http at `Manage Plugins > Advanced tab > Update Site URL`.  I added a few plugins. [3]  See ~/jenkins/README.md for more.
 
     sudo wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
     sudo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
@@ -55,7 +55,7 @@ I installed jenkins as follows.  Make sure you have java8 installed first; my pi
     systemctl restart jenkins
     <do setup at http://ip:8080>
 
-I installed docker via `https://store.docker.com/editions/community/docker-ce-desktop-mac` (laptop) and `curl -sSL https://get.docker.com | sh` (raspberry pi).  I had to edit systemd for the docker service as shown, then set Docker Builder:Docker URL to `tcp://localhost:2375`.  See ~/docker/README.md for more.
+I installed docker via `https://store.docker.com/editions/community/docker-ce-desktop-mac` (laptop) and `curl -sSL https://get.docker.com | sh` (raspberry pi).  In Docker, I had to edit systemd for the docker service as shown, then in Jenkins, I set `Docker Builder > Docker URL` to `tcp://localhost:2375` instead of using `http://`.  See ~/docker/README.md for next steps with Docker.
 
     #ExecStart=/usr/bin/dockerd -H fd://
     ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375
