@@ -22,11 +22,9 @@ Once I reach steady state there, add a third container to the group:
 
 ### What App?
 
-Jenkins and Docker are great but the underlying app they manage is the whole point: get the app into the pipeline and deploy it -- repeat infinitely.  
+Jenkins and Docker are great but the underlying app they manage is the whole point.  I'd been wanting to do more go, which seemed a good fit here: it's a small, modern, self-contained ecosystem that compiles into a fast binary including dependencies, for ease of deployment and maintenance.  I've used it a little and I like it.  It seems to have promise as a leading language for the next decade, with tendrals in both dev and ops.
 
-I'd been wanting to do more go, which seemed a good fit here: it's a small, modern, self-contained ecosystem that compiles into a fast binary including dependencies, for ease of deployment and maintenance.  I've used it a little and I like it.  It seems to have promise as a leading language for the next decade, with tendrals in the ops and dev spaces.
-
-But what would the go app do? I recently added a chicken coop at my house. It has a 12-inch door allowing access to an enclosed run during the day. Manually setting the door each morning and night was a chore, so I automated it with hardware. [1]  Avoiding software was nice: no bugs or releases, no patching or upgrades. I hooked a few things together, and the door just does its thing.  But I wanted to remotely verify coop status, particularly in the winter.  Just add a raspberry pi, a couple types of sensors and a network camera: [2]
+What would the app do? I recently added a chicken coop at my house. It has a 12-inch door allowing access to an enclosed run during the day. Manually setting the door each morning and night was a chore, so I automated it with hardware. [1]  Avoiding software was nice: no bugs or releases, no patching or upgrades. I hooked a few things together, and the door just does its thing.  But I wanted to remotely verify coop status, particularly in the winter.  Just add a raspberry pi, a couple types of sensors and a network camera: [2]
 
   - is the door really up or down as expected
   - what are the temps outside versus inside the coop

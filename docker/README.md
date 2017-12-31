@@ -2,7 +2,7 @@
 
 ### Build Images, Run Containers
 
-It took me a while to get anything working at all.  I landed on a final Dockerfile that let me hit the app on the pi from my laptop, where Jenkins built the go binary and a docker image serving it, and where I instantiated a docker container from the image via `docker run` on the pi:
+It took me a while to get anything working at all.  I landed on a final Dockerfile that let me hit the app on the pi, where Jenkins built the go binary then a docker image serving it, and where I instantiated a docker container from the image via `docker run` on the pi:
 
     # create the dockerfile
     cd $WORKSPACE/docker && \
@@ -12,16 +12,14 @@ It took me a while to get anything working at all.  I landed on a final Dockerfi
     EXPOSE 8081
     
     WORKDIR /app
-    COPY gobinary .
+    ADD gobinary .
     ADD ui/ ./ui/
     
     ENV PORT=8081
     CMD ["/app/gobinary"]
     EOF
 
-Rather than running `docker build . -t coop`, I let jenkins docker-build plugin it, setting `coop` as the plugin option called `Tag of the resulting docker image:`. After build, I verified the image was inventoried via `docker images | grep coop`.  
-
-From there, I used an interactive shell to poke around:
+Rather than running `docker build . -t coop`, I let the jenkins docker-build plugin do it, setting `coop` as the plugin option called `Tag of the resulting docker image:`. After build, I verified the image was inventoried via `docker images | grep coop`.  From there, I used an interactive shell to poke around:
  
     docker run --rm -it coop sh
 
@@ -34,7 +32,7 @@ Everything looked ok but the app wouldn't run:
     /app # ./gobinary 
     sh: ./gobinary: not found
 
-It turns out go compiles with glibc but alpine avoids that in favor of muslc, by default.  I changed the Dockerfile to use `FROM golang` instead of `FROM golang:alpine` and it worked!
+It turns out go compiles with glibc but alpine avoids that in favor of muslc, by default.  I changed the Dockerfile to use `FROM golang` instead of `FROM golang:alpine` and it worked:
 
     docker run --rm -it coop sh
 
@@ -63,5 +61,9 @@ I could track it with this:
     fe89c2315b33        coop                "/app/gobinary"     About a minute ago   Up About a minute   0.0.0.0:8081->8081/tcp   agitated_euclid
 
 ### Where are the Logs?
+
+### How should we test?
+
+### Now have Jenkins deploy the container instead of me running it manually after build
 
 ### How should we monitor?

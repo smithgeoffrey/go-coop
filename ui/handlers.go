@@ -15,18 +15,18 @@ func Home(c *gin.Context) {
 	door := api.Door{}
 	temperature := api.Temp{}
 
-	response, err := http.Get(config.TEMP_URL)
-	if err != nil {
+	if response, err := http.Get(config.TEMP_URL); err != nil {
 		temperature.OutsideSensor = fmt.Sprintf("Error: %s", err)
 		temperature.InsideSensor = fmt.Sprintf("Error: %s", err)
+	} else {
+		json.NewDecoder(response.Body).Decode(&temperature)
 	}
-	json.NewDecoder(response.Body).Decode(&temperature)
 
-	response, err = http.Get(config.DOOR_URL)
-	if err != nil {
+	if response, err := http.Get(config.DOOR_URL); err != nil {
 		door.Status = fmt.Sprintf("Error: %s", err)
+	} else {
+		json.NewDecoder(response.Body).Decode(&door)
 	}
-	json.NewDecoder(response.Body).Decode(&door)
 
 	c.HTML(http.StatusOK, "index.html", gin.H{
 		"title": "Home Page",

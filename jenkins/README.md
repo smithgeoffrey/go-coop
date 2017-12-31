@@ -1,8 +1,4 @@
-# Jenkins CI Pipeline for Running Go inside Docker
-
-### Overview
-
-I want a Jenkins pipeline for running a go binary in a docker container.
+# Pipeline for Running Go inside Docker
 
 ### Config
 
@@ -41,24 +37,28 @@ Here's a list of the basic setup in a job I'm running:
         go get -u github.com/golang/dep/... && \
         dep init && dep ensure && \
         go build *.go && \
-        mv main $WORKSPACE/docker/binary
+        mv main $WORKSPACE/docker/gobinary
     
         EXECUTE SHELL
         # create the dockerfile
         cd $WORKSPACE/docker && \
         cat > Dockerfile << EOF
-        FROM golang:alpine
-        WORKDIR /app
-        COPY ./binary /app/
-        COPY ./ui /app/
+        FROM golang
+        MAINTAINER Geoff Smith "smithgeoffrey123@gmail.com"
         EXPOSE 8081
-        ENTRYPOINT ["./binary"]
-        EOF        
+        
+        WORKDIR /app
+        ADD gobinary .
+        ADD ui/ ./ui/
+        
+        ENV PORT=8081
+        CMD ["/app/gobinary"]
+        EOF
     
         EXECUTE DOCKER COMMAND
         Docker command: Create/build image
         Build context folder: $WORKSPACE/docker
-        Tag of the resulting docker image: $BUILD_NUMBER
+        Tag of the resulting docker image: coop
             
     POST-BUILD ACTIONS
         
