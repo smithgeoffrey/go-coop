@@ -1,8 +1,8 @@
 # Chicken Coop Automation with Jenkins, Docker & Go
 
-### A Container Pipeline
+### Container Pipeline
 
-A bluegreen-capable pipeline is the primary goal.  Running on a raspberry pi is a nicety for my use case, but it could run anywhere:
+A bluegreen or canary-capable pipeline is the primary goal.  Running on a raspberry pi is a nicety for my use case, but it could run anywhere:
 
 - jenkins running locally on the pi 
   - polls version control of an app for each commit
@@ -17,29 +17,56 @@ A bluegreen-capable pipeline is the primary goal.  Running on a raspberry pi is 
 
 Add a couple more containers on the pi to support the ecosystem:
 
-- ELK.  See ~/logging
-- Promethius.  See ~/monitoring
+- ELK.  See ~/logging,
+- Promethius.  See ~/monitoring.
 
 ### The App
 
-A pipeline needs an app as its object.  I'd been wanting to do more go.  It's a small, modern, self-contained ecosystem that compiles into a fast binary including dependencies, for ease of deployment and maintenance.  I've used it a little and I like it.  It seems to have promise as a leading language for the next decade, with tendrals in both dev and ops.
-
-What would the app do? I recently added a chicken coop at my house. It has a 12-inch door allowing access to an enclosed run during the day. Manually setting the door each morning and night was a chore, so I automated it with hardware. [1]  Avoiding software was nice: no bugs or releases, no patching or upgrades. I hooked a few things together, and the door just does its thing.  But I wanted to remotely verify coop status, particularly in the winter.  Just add a raspberry pi, a couple types of sensors and a network camera: [2]
-
-  - is the door really up or down as expected
-  - what are the temps outside versus inside the coop
-  - a live video stream of the run, where the birds spend nearly all of their awake time (when not free ranging in the backyard on weekends)
-
-Here are the go books I've used, in order of my getting them:
+I'd been wanting to do more go.  It's a small, modern, self-contained ecosystem that compiles into a fast binary including dependencies for ease of deployment.  I've used it a little and I like it.  It has tendrals in both dev and ops. Here are the go books I've used, in order of my getting them:
 
 - `The Go Programming Language` by Donovan and Kernighan
 - `Go in Practice` by Butcher & Farina
 
-Before diving into the app itself, consider setup on the raspberry pi.
+What would the app do? I recently added a chicken coop at my house. It has a 12-inch door allowing access to an enclosed run during the day. Manually setting the door each morning and night was a chore, so I automated it with hardware. [1]  I hooked a few things together, and the door just does its thing.  But I wanted to remotely verify coop status, particularly in the winter.  Just add a raspberry pi, a couple types of sensors and a network camera: [2]
 
-### Raspberry Pi Setup
+- is the door really up or down as expected
+- what are the temps outside versus inside the coop
+- a live video stream of the run, where the birds spend nearly all of their awake time (when not free ranging in the backyard on weekends)
 
-I installed jenkins as follows.  Make sure you have java8 installed first.  My pi already had 7 and 8 arm versions of jre available, e.g., `ln -s /usr/lib/jvm/jdk-8-oracle-arm32-vfp-hflt/bin/java /etc/alternatives/java`.  Jenkins couldn't fetch plugins throwing a java trace relating to an SSL error, until I changed the update URL from https to http at `Manage Plugins > Advanced tab > Update Site URL`.  I added a few plugins. [3]  See ~/jenkins/README.md for more.
+I used an IDE called GoLand. [3] I loosely followed:
+
+- (organization) https://golang.org/doc/code.html#Organization 
+- (vendoring) http://lucasfcosta.com/2017/02/07/Understanding-Go-Dependency-Management.html and https://github.com/golang/dep
+
+Even more loosely, I browsed some tutorials on webapps using go/gin. [4]  I wanted just a few basics:
+
+    GENERALLY
+    - keep everything broken out and modular so the structure looks simple and clean even as the app grows
+    - use dependency managment [5]
+    - use a debugger [6]
+    
+    TESTING
+    - include testing as a top-level package, a first-class citizen
+    - play with mocking
+    - play with continuously building/testing the app
+    
+    DATABASE
+    - run postgres [7]
+    - use GORM to interact with it (http://jinzhu.me/gorm)
+    
+    UI
+    - keep UI as a top-level package
+    - HTML templates
+    - reusable components like header, footer, menu and sidebar
+    - auth for home page
+    
+    API
+    - keep API as a top-level package
+    - json
+
+### Raspberry Pi
+
+I installed jenkins as follows.  Make sure you have java8 installed first.  My pi already had 7 and 8 arm versions of jre available, e.g., `ln -s /usr/lib/jvm/jdk-8-oracle-arm32-vfp-hflt/bin/java /etc/alternatives/java`.  Jenkins couldn't fetch plugins throwing a java trace relating to an SSL error, until I changed the update URL from https to http at `Manage Plugins > Advanced tab > Update Site URL`.  I added a few plugins. [8]  See ~/jenkins/README.md for more.
 
     sudo wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
     sudo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
@@ -56,40 +83,7 @@ I installed docker via `https://store.docker.com/editions/community/docker-ce-de
     #ExecStart=/usr/bin/dockerd -H fd://
     ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375
 
-I installed go at /usr/local/go but you could put it anywhere. Just download the `arm` version and unzip it there. That is GOROOT, not to be confused with GOPATH.  GOPATH sets your `workspace` having three subdirs `bin`, `pkg`, `src`, with your code under `src`. You also want to add the GOROOT binary to your PATH so that you can run `go <options>` at the command line.  Here's my bashrc for all of this. [4] The top-level config/ sets environment variables consumed by a startup script for the service in systemd that I created. [5]
-
-### The App, Again
-
-I used an IDE called GoLand. [6] I loosely followed:
-
-- (organization) https://golang.org/doc/code.html#Organization 
-- (vendoring) http://lucasfcosta.com/2017/02/07/Understanding-Go-Dependency-Management.html and https://github.com/golang/dep
-
-Even more loosely, I browsed some tutorials on webapps using go/gin. [7]  I wanted just a few basics:
-
-    GENERALLY
-    - keep everything broken out and modular so the structure looks simple and clean even as the app grows
-    - use dependency managment [8]
-    - use a debugger [9]
-    
-    TESTING
-    - include testing as a top-level package, a first-class citizen
-    - play with mocking
-    - play with continuously building/testing the app
-    
-    DATABASE
-    - run postgres [10]
-    - use GORM to interact with it (http://jinzhu.me/gorm)
-    
-    UI
-    - keep UI as a top-level package
-    - HTML templates
-    - reusable components like header, footer, menu and sidebar
-    - auth for home page
-    
-    API
-    - keep API as a top-level package
-    - json
+I installed go at /usr/local/go but you could put it anywhere. Just download the `arm` version and unzip it there. That is GOROOT, not to be confused with GOPATH.  GOPATH sets your `workspace` having three subdirs `bin`, `pkg`, `src`, with your code under `src`. You also want to add the GOROOT binary to your PATH so that you can run `go <options>` at the command line.  Here's my bashrc for all of this. [9] The top-level config/ sets environment variables consumed by a startup script for the service in systemd that I created. [10]
 
 ### References
 
@@ -113,53 +107,18 @@ Door position sensors: https://www.amazon.com/gp/product/B0009SUF08/ref=oh_aui_d
 
 Temperature sensors: https://www.amazon.com/gp/product/B01IOK40DA/ref=oh_aui_detailpage_o02_s01?ie=UTF8&psc=1
 
-[3] Jenkins plugins I installed beyond the default suite:
+[3] https://www.jetbrains.com/go/
 
-    Git Plugin
-    Go Plugin
-    Packer
-    Terraform Plugin
-    Pipeline
-    Slack Notification Plugin
-    Hudson Post build task
-    Show Build Parameters plugin
-    Timestamper
-    Workspace Cleanup Plugin
-
-[4] Bashrc:
-
-    export GOROOT=/usr/local/go
-    export GOPATH=$HOME
-    mkdir -p $GOPATH/bin $GOPATH/pkg $GOPATH/src 
-    export PATH+=:$GOROOT/bin
-
-[5] It lives at /etc/systemd/system/coop.service as shown.  It lets me do `systemctl start coop`:
-    
-    [Unit]
-    Description=Golang Chicken Coop Web Service
-    After=network.target auditd.service
-    
-    [Service]
-    WorkingDirectory=/home/gsmith/src/github.com/smithgeoffrey/go-coop
-    EnvironmentFile=/home/gsmith/src/github.com/smithgeoffrey/go-coop/config/environment.vars
-    ExecStart=/usr/local/go/bin/go run /home/gsmith/src/github.com/smithgeoffrey/go-coop/main.go
-    
-    [Install]
-    WantedBy=multi-user.target
-    Alias=coop.service
-
-[6] https://www.jetbrains.com/go/
-
-[7] I started with https://github.com/gin-gonic/gin.  Then I found three articles, here.  I barely finished browsing the first before I just started tinkering with my setup.  I do hope to return to these for things like examples of auth, DB conns and testing.  
+[4] I started with https://github.com/gin-gonic/gin.  Then I found three articles, here.  I barely finished browsing the first before I just started tinkering with my setup.  I do hope to return to these for things like examples of auth, DB conns and testing.  
 https://semaphoreci.com/community/tutorials/building-go-web-applications-and-microservices-using-gin
 https://semaphoreci.com/community/tutorials/test-driven-development-of-go-web-applications-with-gin
 http://cgrant.io/tutorials/go/simple-crud-api-with-go-gin-and-gorm/
 
-[8] I want to try vendoring with `https://github.com/golang/dep`.  I installed it using `brew install dep` (laptop) and `go get -u github.com/golang/dep/...` (raspberry pi). 
+[5] I want to try vendoring with `https://github.com/golang/dep`.  I installed it using `brew install dep` (laptop) and `go get -u github.com/golang/dep/...` (raspberry pi). 
 
-[9] See https://lincolnloop.com/blog/debugging-go-code/.  I want to try delv versus godebug at https://github.com/derekparker/delve and https://github.com/mailgun/godebug, respectively, and whatever my IDE has if anything.
+[6] See https://lincolnloop.com/blog/debugging-go-code/.  I want to try delv versus godebug at https://github.com/derekparker/delve and https://github.com/mailgun/godebug, respectively, and whatever my IDE has if anything.
 
-[10] I installed postgres on the pi via:
+[7] I installed postgres on the pi via:
 
     apt-get update && apt-get install postgresql-9.4
     echo "host  all  all  172.16.1.0/24 md5" >> /etc/postgresql/9.4/main/pg_hba.conf
@@ -179,3 +138,38 @@ http://cgrant.io/tutorials/go/simple-crud-api-with-go-gin-and-gorm/
 But here I want to try running it in a container.  I did that via:
 
     insert
+
+[8] Jenkins plugins I installed beyond the default suite:
+
+    Git Plugin
+    Go Plugin
+    Packer
+    Terraform Plugin
+    Pipeline
+    Slack Notification Plugin
+    Hudson Post build task
+    Show Build Parameters plugin
+    Timestamper
+    Workspace Cleanup Plugin
+
+[9] Bashrc:
+
+    export GOROOT=/usr/local/go
+    export GOPATH=$HOME
+    mkdir -p $GOPATH/bin $GOPATH/pkg $GOPATH/src 
+    export PATH+=:$GOROOT/bin
+
+[10] It lives at /etc/systemd/system/coop.service as shown.  It lets me do `systemctl start coop`:
+    
+    [Unit]
+    Description=Golang Chicken Coop Web Service
+    After=network.target auditd.service
+    
+    [Service]
+    WorkingDirectory=/home/gsmith/src/github.com/smithgeoffrey/go-coop
+    EnvironmentFile=/home/gsmith/src/github.com/smithgeoffrey/go-coop/config/environment.vars
+    ExecStart=/usr/local/go/bin/go run /home/gsmith/src/github.com/smithgeoffrey/go-coop/main.go
+    
+    [Install]
+    WantedBy=multi-user.target
+    Alias=coop.service
