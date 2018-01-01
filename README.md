@@ -1,6 +1,6 @@
 # Chicken Coop Automation with Jenkins, Docker & Go
 
-### The Pipeline
+### A Container Pipeline
 
 A bluegreen-capable pipeline is the primary goal.  Running on a raspberry pi is a nicety for my use case, but it could run anywhere:
 
@@ -13,14 +13,16 @@ A bluegreen-capable pipeline is the primary goal.  Running on a raspberry pi is 
     - publishes cold
     - cuts over traffic to cold
 
-Consider adding a couple more containers on the pi, to fill things out more wholly:
+### Logging & Monitoring
 
-- log aggregation (ELK)
-- monitoring/metrics (Promethius/Grafana)
+Add a couple more containers on the pi to support the ecosystem:
+
+- ELK.  See ~/logging
+- Promethius.  See ~/monitoring
 
 ### The App
 
-Jenkins and Docker are great but the underlying app they manage is the whole point.  I'd been wanting to do more go, which seems a good fit here: it's a small, modern, self-contained ecosystem that compiles into a fast binary including dependencies, for ease of deployment and maintenance.  I've used it a little and I like it.  It seems to have promise as a leading language for the next decade, with tendrals in both dev and ops.
+A pipeline needs an app as its object.  I'd been wanting to do more go.  It's a small, modern, self-contained ecosystem that compiles into a fast binary including dependencies, for ease of deployment and maintenance.  I've used it a little and I like it.  It seems to have promise as a leading language for the next decade, with tendrals in both dev and ops.
 
 What would the app do? I recently added a chicken coop at my house. It has a 12-inch door allowing access to an enclosed run during the day. Manually setting the door each morning and night was a chore, so I automated it with hardware. [1]  Avoiding software was nice: no bugs or releases, no patching or upgrades. I hooked a few things together, and the door just does its thing.  But I wanted to remotely verify coop status, particularly in the winter.  Just add a raspberry pi, a couple types of sensors and a network camera: [2]
 
