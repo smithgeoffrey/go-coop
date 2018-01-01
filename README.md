@@ -1,4 +1,4 @@
-# Bluegreen deploys with Jenkins, Docker & Go
+# Chicken Coop Automation with Jenkins, Docker & Go
 
 ### The Pipeline
 
@@ -12,16 +12,11 @@ A bluegreen-capable pipeline is the primary goal.  Running on a raspberry pi is 
     - tests cold
     - publishes cold
     - cuts over traffic to cold
-    - optionally rolls
 
-Once I reach steady state, add:
- 
-- a second container on the pi
-  - serves postgres consumed by the app
+Consider adding a couple more containers on the pi, to fill things out more wholly:
 
-Try a third container:
-
-- migrate Jenkins to a container on the pi
+- log aggregation (ELK)
+- monitoring/metrics (Promethius/Grafana)
 
 ### The App
 
