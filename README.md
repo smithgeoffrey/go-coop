@@ -22,7 +22,7 @@ Logging and monitoring are important.  Add a couple more containers:
 
 ### The App
 
-Python? Java? I'd been wanting to try go. It's a small, modern, self-contained ecosystem that compiles into a fast binary including dependencies for ease of deployment.  I've used it a little and I like it.  It has tendrals in both dev and ops. Here are the go books I've used, in order of my getting them:
+Python? Java? I'd been wanting to try Go. It's a small, modern, self-contained ecosystem that compiles into a fast binary including dependencies for ease of deployment.  I've used it a little and I like it.  It has tendrals in both dev and ops. Here are the go books I've used, in order of my getting them:
 
 - `The Go Programming Language` by Donovan and Kernighan
 - `Go in Practice` by Butcher & Farina

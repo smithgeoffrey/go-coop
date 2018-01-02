@@ -1,6 +1,10 @@
-# Docker
+# Pipeline
 
-### Build Image, Run Container
+### Overview
+
+Here we instrument a pipeline to deploy a Go binary running inside a Docker container.
+
+### Docker
 
 I landed on a Dockerfile that let me hit the app on the pi:
 
@@ -64,10 +68,67 @@ That shows running containers.  To see them all regarless of status:
 
 I noticed the strange names being assigned to containers, like agitated_euclid.  It seems the code for that is at https://github.com/moby/moby/blob/master/pkg/namesgenerator/names-generator.go.
 
-### Where are the Logs?
+### Jenkins
 
-### Now have Jenkins deploy the container instead of me running it manually after build
+Jenkins will orchestrate the Go and Docker builds, plus post-build aspects of testing, publishing and deploying.  Here's a list of the basic setup in a Jenkins job I'm running:
 
-### How should we test?
+    SOURCE CODE MANAGEMENT
+        
+        REPOSITORIES
+        https://github.com/smithgeoffrey/go-coop
+        */master
+        
+        ADDITIONAL BEHAVIORS: Checkout to a subdirectory
+        $WORKSPACE/src/github.com/smithgeoffrey/go-coop
+        
+    BUILD ENVIRONMENT
+    
+        Delete workspace before build starts
+        Add timestamps to console output
+        Inject environment variables to the build process
+            Properties content
+                GOROOT=/usr/local/go
+                GOPATH=$WORKSPACE
+                PATH+=:$GOROOT/bin:$GOPATH/bin
+    
+    BUILD
+        
+        EXECUTE SHELL
+        # prep a docker buildir having static content for the app
+        mkdir $WORKSPACE/docker && \
+        cp -a $WORKSPACE/src/github.com/smithgeoffrey/go-coop/ui $WORKSPACE/docker && \
+        rm -f $WORKSPACE/docker/ui/*.*
 
-### How should we monitor?
+        EXECUTE SHELL
+        # build the app binary and put it in the docker buildir
+        cd $WORKSPACE/src/github.com/smithgeoffrey/go-coop && \
+        go get -u github.com/golang/dep/... && \
+        dep init && dep ensure && \
+        go build *.go && \
+        mv main $WORKSPACE/docker/gobinary
+    
+        EXECUTE SHELL
+        # create the dockerfile
+        cd $WORKSPACE/docker && \
+        cat > Dockerfile << EOF
+        FROM golang
+        MAINTAINER Geoff Smith "smithgeoffrey123@gmail.com"
+        EXPOSE 8081
+        
+        WORKDIR /app
+        ADD gobinary .
+        ADD ui/ ./ui/
+        
+        ENV PORT=8081
+        CMD ["/app/gobinary"]
+        EOF
+    
+        EXECUTE DOCKER COMMAND
+        Docker command: Create/build image
+        Build context folder: $WORKSPACE/docker
+        Tag of the resulting docker image: coop
+            
+    POST-BUILD ACTIONS
+        
+        SLACK NOTIFICATIONS
+        notify failure, success & back to normal
