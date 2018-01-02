@@ -66,7 +66,7 @@ Even more loosely, I browsed some tutorials on webapps using go/gin. [4]  I want
 
 ### Raspberry Pi
 
-I installed jenkins as follows.  Make sure you have java8 installed first.  My pi already had 7 and 8 arm versions of jre available, e.g., `ln -s /usr/lib/jvm/jdk-8-oracle-arm32-vfp-hflt/bin/java /etc/alternatives/java`.  Jenkins couldn't fetch plugins throwing a java trace relating to an SSL error, until I changed the update URL from https to http at `Manage Plugins > Advanced tab > Update Site URL`.  I added a few plugins. [8]  See ~/jenkins/README.md for more.
+I installed jenkins as follows.  Make sure you have java8 installed first.  My pi already had 7 and 8 arm versions of jre available, e.g., `ln -s /usr/lib/jvm/jdk-8-oracle-arm32-vfp-hflt/bin/java /etc/alternatives/java`.  Jenkins couldn't fetch plugins throwing a java trace relating to an SSL error, until I changed the update URL from https to http at `Manage Plugins > Advanced tab > Update Site URL`.  I added a few plugins. [8]  
 
     sudo wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
     sudo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
@@ -78,7 +78,7 @@ I installed jenkins as follows.  Make sure you have java8 installed first.  My p
     systemctl restart jenkins
     <do setup at http://ip:8080>
 
-I installed docker via `https://store.docker.com/editions/community/docker-ce-desktop-mac` (laptop) and `curl -sSL https://get.docker.com | sh` (raspberry pi).  In Docker, I had to edit systemd for the docker service as shown, then in Jenkins, I set `Docker Builder > Docker URL` to `tcp://localhost:2375` instead of using `http://`.  See ~/docker/README.md for next steps with Docker.
+I installed docker via `https://store.docker.com/editions/community/docker-ce-desktop-mac` (laptop) and `curl -sSL https://get.docker.com | sh` (raspberry pi).  In Docker, I had to edit systemd for the docker service as shown, then in Jenkins, I set `Docker Builder > Docker URL` to `tcp://localhost:2375` instead of using `http://`.
 
     #ExecStart=/usr/bin/dockerd -H fd://
     ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375
