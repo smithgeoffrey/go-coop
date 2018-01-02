@@ -2,9 +2,9 @@
 
 ### Container Pipeline
 
-A bluegreen or canary-capable pipeline is the primary goal.  Running on a raspberry pi is a nicety for my use case, but it could run anywhere:
+A bluegreen pipeline is the primary goal.  Running on a raspberry pi is a nicety for my use case, but it's not important:
 
-- jenkins running locally on the pi 
+- jenkins running locally on the pi  
   - polls version control of an app for each commit
     - builds app into a binary
     - builds docker image running the binary
@@ -15,14 +15,14 @@ A bluegreen or canary-capable pipeline is the primary goal.  Running on a raspbe
 
 ### Logging & Monitoring
 
-Add a couple more containers on the pi to support the ecosystem:
+Logging and monitoring are important.  Add a couple more containers:
 
-- ELK.  See ~/logging,
-- Promethius.  See ~/monitoring.
+- try ELK: see ~/logging
+- try Prometheus: see ~/monitoring
 
 ### The App
 
-I'd been wanting to do more go.  It's a small, modern, self-contained ecosystem that compiles into a fast binary including dependencies for ease of deployment.  I've used it a little and I like it.  It has tendrals in both dev and ops. Here are the go books I've used, in order of my getting them:
+Python? Java? I'd been wanting to try go. It's a small, modern, self-contained ecosystem that compiles into a fast binary including dependencies for ease of deployment.  I've used it a little and I like it.  It has tendrals in both dev and ops. Here are the go books I've used, in order of my getting them:
 
 - `The Go Programming Language` by Donovan and Kernighan
 - `Go in Practice` by Butcher & Farina
