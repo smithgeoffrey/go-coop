@@ -23,7 +23,7 @@ I landed on a Dockerfile that let me hit the app on the pi:
     CMD ["/app/gobinary"]
     EOF
 
-Rather than running `docker build . -t coop`, I let the jenkins docker-build plugin do it, setting `coop` as the plugin option called `Tag of the resulting docker image:`. Once built, I verified via `docker images | grep coop` and `docker inspect coop`.  I used an interactive shell of a container running the image:
+Rather than running `docker build . -t coop`, I let Jenkins' docker-build plugin do it, setting `coop` as the plugin option called `Tag of the resulting docker image:`. Once built, I verified via `docker images | grep coop` and `docker inspect coop`.  I used an interactive shell of a container running the image:
  
     docker run -it coop sh
 
@@ -36,7 +36,7 @@ Everything looked ok except that the app wouldn't run:
     /app # ./gobinary 
     sh: ./gobinary: not found
 
-It turns out go compiles with glibc but alpine avoids that in favor of muslc, by default.  I changed the Dockerfile to use `FROM golang` instead of `FROM golang:alpine` and that issue went away:
+It turns out go compiles with glibc but alpine avoids that in favor of muslc, both by default.  I changed the Dockerfile to use `FROM golang` instead of `FROM golang:alpine` and the issue went away:
 
     docker run -it coop sh
 
@@ -62,15 +62,15 @@ I could track it with this:
     CONTAINER ID  IMAGE  COMMAND          CREATED              STATUS              PORTS                    NAMES
     fe89c2315b33  coop   "/app/gobinary"  About a minute ago   Up About a minute   0.0.0.0:8081->8081/tcp   agitated_euclid
 
-That shows running containers.  To see them all regarless of status:
+That shows running containers.  To see them all regardless of status:
 
     docker container ls --all
 
-I noticed the strange names being assigned to containers, like agitated_euclid.  It seems the code for that is at https://github.com/moby/moby/blob/master/pkg/namesgenerator/names-generator.go.
+Nnotice the strange names being assigned to containers, like agitated_euclid.  It seems the code for that is at https://github.com/moby/moby/blob/master/pkg/namesgenerator/names-generator.go.
 
 ### Jenkins
 
-Jenkins will orchestrate the Go and Docker builds, plus post-build aspects of testing, publishing and deploying.  Here's a list of the basic setup in a Jenkins job I'm running:
+Jenkins will orchestrate the Go and Docker builds then handle post-build aspects of testing, publishing and deploying.  Here's a list of ongoing setup in a Jenkins job I'm running:
 
     SOURCE CODE MANAGEMENT
         

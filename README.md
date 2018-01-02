@@ -1,6 +1,6 @@
 # Chicken Coop Automation with Jenkins, Docker & Go
 
-### Container Pipeline
+### Pipeline
 
 A bluegreen pipeline is the primary goal.  Running on a raspberry pi is a nicety for my use case, but it's not important:
 
@@ -15,7 +15,7 @@ A bluegreen pipeline is the primary goal.  Running on a raspberry pi is a nicety
 
 ### Logging & Monitoring
 
-Logging and monitoring are important.  Add a couple more containers:
+Logging and monitoring are first-class citizens of the pipeline.  Add a couple more containers:
 
 - try ELK: see ~/logging
 - try Prometheus: see ~/monitoring
