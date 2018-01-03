@@ -2,7 +2,9 @@
 
 ### Pipeline
 
-A bluegreen pipeline is the primary goal.  Running on a raspberry pi is a nicety for my use case, but it's not important:
+A pipeline is the primary goal.  Preferably one with some form of risk-mitigation baked in, like bluegreen, canary or feature-flag deploys, allowing some kind of cold testing before cutover.
+
+Running on a raspberry pi is a nicety for my use case (and it's fun), but it's not overly important.  The project could run on any platform.
 
 - jenkins running locally on the pi  
   - polls version control of an app for each commit
