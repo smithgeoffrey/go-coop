@@ -82,7 +82,7 @@ I installed docker via `https://store.docker.com/editions/community/docker-ce-de
     #ExecStart=/usr/bin/dockerd -H fd://
     ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375
 
-I installed docker-compose using their Alternative Install Options method, via pip.  There was some complexity that I stumbled through, but this got me up and running:
+I installed docker-compose using their `Alternative Install Options` method, via pip.  There was some complexity that I stumbled through, but this got me up and running:
 
     apt-get remove python-pip
     easy_install pip
