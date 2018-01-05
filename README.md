@@ -21,7 +21,7 @@ Logging and monitoring aren't optional.  Add a couple more containers:
 
 ### App
 
-Python? Java? I'd been wanting to try Go. It's a small, modern, self-contained ecosystem that compiles into a fast binary including dependencies for ease of deployment.  I've used it a little and I like it.  It has tendrils in dev and ops, and cloud and systems programming.  After I mature with it, I can play with best-in-class concurrency.  Here are the go books I've used, in order of my getting them:
+Python? Java? Great languages. I'd been wanting to try Go. It's a small, modern, self-contained ecosystem that compiles into a fast binary including dependencies for ease of deployment.  I've used it a little and I like it.  It has tendrils in dev and ops, and cloud and systems programming.  After I mature with it, I can play with best-in-class concurrency.  Here are the go books I've used, in order of my getting them:
 
 - `The Go Programming Language` by Donovan and Kernighan
 - `Go in Practice` by Butcher & Farina
@@ -82,7 +82,13 @@ I installed docker via `https://store.docker.com/editions/community/docker-ce-de
     #ExecStart=/usr/bin/dockerd -H fd://
     ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375
 
-It looks like docker-compose isn't supported on the pi yet :(.
+I installed docker-compose using their Alternative Install Options method, via pip.  There was some complexity that I stumbled through, but this got me up and running:
+
+    apt-get remove python-pip
+    easy_install pip
+    ln -s /usr/local/bin/pip /usr/bin/pip
+    pip install docker-compose
+    docker-compose --version
 
 I installed go at /usr/local/go but you could put it anywhere. Just download the `arm` version and unzip it there. That is GOROOT, not to be confused with GOPATH.  GOPATH sets your `workspace` having three subdirs `bin`, `pkg`, `src`, with your code under `src`. You also want to add the GOROOT binary to your PATH so that you can run `go <options>` at the command line.  Here's my bashrc for all of this. [9] The top-level config/ sets environment variables consumed by a startup script for the service in systemd that I created. [10]
 
