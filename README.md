@@ -2,34 +2,31 @@
 
 ### Pipeline
 
-A pipeline is the primary goal.  Preferably one with some form of risk-mitigation baked in, like bluegreen, canary or feature-flag deploys, allowing some kind of cold testing before cutover.
-
-Running on a raspberry pi is a nicety for my use case (and it's fun), but it's not overly important.  The project could run on any platform.
+A pipeline is the primary goal. Running on a raspberry pi is a nicety for my use case (and it's fun), but it's not overly important.  The project could run on any platform.
 
 - jenkins running locally on the pi  
   - polls version control of an app for each commit
     - builds app into a binary
-    - builds docker image running the binary
-    - deploys image as cold container in parallel to hot (live) 
-    - tests cold
-    - publishes cold
-    - cuts over traffic to cold
+    - builds docker image housing the binary
+    - deploys container from the image 
+    - tests
+    - publishes image if tests pass
 
 ### Logging & Monitoring
 
-Logging and monitoring are first-class citizens of the pipeline.  Add a couple more containers:
+Logging and monitoring aren't optional.  Add a couple more containers:
 
 - try ELK: see ~/logging
 - try Prometheus: see ~/monitoring
 
-### The App
+### App
 
-Python? Java? I'd been wanting to try Go. It's a small, modern, self-contained ecosystem that compiles into a fast binary including dependencies for ease of deployment.  I've used it a little and I like it.  It has tendrals in both dev and ops. Here are the go books I've used, in order of my getting them:
+Python? Java? I'd been wanting to try Go. It's a small, modern, self-contained ecosystem that compiles into a fast binary including dependencies for ease of deployment.  I've used it a little and I like it.  It has tendrils in dev and ops, and cloud and systems programming.  After I mature with it, I can play with best-in-class concurrency.  Here are the go books I've used, in order of my getting them:
 
 - `The Go Programming Language` by Donovan and Kernighan
 - `Go in Practice` by Butcher & Farina
 
-What would the app do? I recently added a chicken coop at my house. It has a 12-inch door allowing access to an enclosed run during the day. Manually setting the door each morning and night was a chore, so I automated it with hardware. [1]  I hooked a few things together, and the door just does its thing.  But I wanted to remotely verify coop status, particularly in the winter.  Just add a raspberry pi, a couple types of sensors and a network camera: [2]
+I needed a subject for the app.  I recently added a chicken coop at my house. It has a 12-inch door allowing access to an enclosed run during the day. Manually setting the door each morning and night was a chore, so I automated it with hardware. [1]  I hooked a few things together, and the door just does its thing.  But I wanted to remotely verify coop status, particularly in the winter.  Just add a raspberry pi, a couple types of sensors and a network camera: [2]
 
 - is the door really up or down as expected
 - what are the temps outside versus inside the coop
@@ -53,7 +50,7 @@ Even more loosely, I browsed some tutorials on webapps using go/gin. [4]  I want
     - play with continuously building/testing the app
     
     DATABASE
-    - run postgres [7]
+    - run postgres if any database is needed [7]
     - use GORM to interact with it (http://jinzhu.me/gorm)
     
     UI
