@@ -1,12 +1,14 @@
 # Monitoring
 
-Prometheus is an open source monitoring system that uses a multi-dimensional data-model and a powerful query language, allowing fine-tuned control and more accurate reporting.  It can be frontended with Grafana if the native PromDash isn't enough, and it has AlertManager for sending email or slack. [1]
+Prometheus is an open source monitoring system [1]:
+  - frontend with Grafana if native PromDash isn't enough
+  - send email or slack with native AlertManager
+  - node_exporter host agent for OS-level metrics like cpu/mem/disk
+  - blackbox_exporter for traditional nagios-like checks  
 
-Here on the pi, run a Prometheus `server` as a container.  Then run `node_exporter` agents that expose host metrics.  Run the exporter on the pi itself and on containers running on the pi.
+### Expose Host Metrics with Node Exporter
 
-### Expose Metrics of the Pi
-
-I tried a blog specific to raspberry pi at https://blog.alexellis.io/prometheus-nodeexporter-rpi/ (rpi setup) and https://blog.alexellis.io/prometheus-monitoring/ (prom generally).
+To expose metrics of the pi itself, install node_exporter directly. I followed https://blog.alexellis.io/prometheus-nodeexporter-rpi/ (rpi setup).
 
     curl -SL https://github.com/prometheus/node_exporter/releases/download/v0.14.0/node_exporter-0.14.0.linux-armv7.tar.gz > node_exporter.tar.gz && \
     sudo tar -xvf node_exporter.tar.gz -C /usr/local/bin/ --strip-components=1
@@ -26,20 +28,81 @@ Now create a systemd startup for it at /etc/systemd/system/prom_node_exporter.se
     WantedBy=multi-user.target
     Alias=prom.service
 
-Verify locally:
-
-    # systemd log
-    journalctl -u prom_node_exporter
-    
-    # netstat
-    netstat -antup | grep exporter    
-    tcp6       0      0 :::9100                 :::*                    LISTEN      2816/node_exporter
-
 Browse to it remotely from your laptop:
 
     http://<rpi>:9100/metrics
 
-### Expose Metrics of Containers Running on The Pi
+### Harvest Host Metrics with Prometheus Server
+
+Run the server as a container.  Dockerhub at https://hub.docker.com/r/prom/prometheus/~/dockerfile/ suggested a dockerfile to use.  
+
+    FROM        quay.io/prometheus/busybox:latest
+    MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
+    
+    COPY prometheus                             /bin/prometheus
+    COPY promtool                               /bin/promtool
+    COPY documentation/examples/prometheus.yml  /etc/prometheus/prometheus.yml
+    COPY console_libraries/                     /etc/prometheus/
+    COPY consoles/                              /etc/prometheus/
+    
+    EXPOSE     9090
+    VOLUME     [ "/prometheus" ]
+    WORKDIR    /prometheus
+    ENTRYPOINT [ "/bin/prometheus" ]
+    CMD        [ "-config.file=/etc/prometheus/prometheus.yml", \
+                 "-storage.local.path=/prometheus", \
+                 "-web.console.libraries=/etc/prometheus/console_libraries", \
+                 "-web.console.templates=/etc/prometheus/consoles" ]
+
+I created a Jenkins job doing that, first downloading their repo:
+
+    SOURCE CODE MANAGEMENT
+        
+        REPOSITORIES
+        https://github.com/prometheus/prometheus
+        */master
+                
+    BUILD ENVIRONMENT
+    
+        Delete workspace before build starts
+        Add timestamps to console output
+            
+    BUILD
+    
+        EXECUTE SHELL
+        # create the dockerfile
+        cd $WORKSPACE/docker && \
+        cat > Dockerfile << EOF
+        FROM        quay.io/prometheus/busybox:latest
+        MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
+        
+        COPY cmd/prometheus                             /bin/prometheus
+        COPY cmd/promtool                               /bin/promtool
+        COPY documentation/examples/prometheus.yml  /etc/prometheus/prometheus.yml
+        COPY console_libraries/                     /etc/prometheus/
+        COPY consoles/                              /etc/prometheus/
+        
+        EXPOSE     9090
+        VOLUME     [ "/prometheus" ]
+        WORKDIR    /prometheus
+        ENTRYPOINT [ "/bin/prometheus" ]
+        CMD        [ "-config.file=/etc/prometheus/prometheus.yml", \
+                     "-storage.local.path=/prometheus", \
+                     "-web.console.libraries=/etc/prometheus/console_libraries", \
+                     "-web.console.templates=/etc/prometheus/consoles" ]
+        EOF
+    
+        EXECUTE DOCKER COMMAND
+        Docker command: Create/build image
+        Build context folder: $WORKSPACE
+        Tag of the resulting docker image: geoff-prometheus
+    
+    POST-BUILD ACTIONS
+        
+        SLACK NOTIFICATIONS
+        notify failure, success & back to normal
+
+### Expose Container Metrics
 
 Our Dockerfile can do the node_exporter similarly:
 
@@ -57,6 +120,7 @@ Run jenkins again and replace the coop container.  Note the port translation whe
 
 ### References
 
-[1] https://www.digitalocean.com/community/tutorials/how-to-use-prometheus-to-monitor-your-centos-7-server
+[1] See https://blog.alexellis.io/prometheus-monitoring/ and
+https://www.digitalocean.com/community/tutorials/how-to-use-prometheus-to-monitor-your-centos-7-server
 
 [2] See, e.g., https://coreos.com/os/docs/latest/getting-started-with-systemd.html#unit-file
