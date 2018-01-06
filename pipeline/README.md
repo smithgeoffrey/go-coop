@@ -25,7 +25,7 @@ I landed on a Dockerfile that let me hit the app on the pi:
 
 Rather than running `docker build . -t coop`, I let Jenkins' docker-build plugin do it, setting `coop` as the plugin option called `Tag of the resulting docker image:`. Once built, I verified via `docker images | grep coop` and `docker inspect coop`.  I used an interactive shell of a container running the image:
  
-    docker run -it --name coop coop sh
+    docker container run -it --name coop coop sh
 
     /app # ls
     gobinary  ui
@@ -38,7 +38,7 @@ Everything looked ok except that the app wouldn't run:
 
 It turns out go compiles with glibc but alpine avoids that in favor of muslc, both by default.  I changed the Dockerfile to use `FROM golang` instead of `FROM golang:alpine` and the issue went away:
 
-    docker run -it coop sh
+    docker container run -it coop sh
 
     # pwd
     /app
@@ -49,26 +49,33 @@ It turns out go compiles with glibc but alpine avoids that in favor of muslc, bo
   
 But I couldn't connect to <pi ip>:8081 from my laptop, until I added port translation between the host and container:
  
-    docker run -p 8081:8081 --name coop coop
+    docker container run -p 8081:8081 --name coop coop
 
 Finally, it was holding on to the shell until I specified the detachment option:
 
-    docker run -d -p 8081:8081 --name coop coop
+    docker container run -d -p 8081:8081 --name coop coop
     fe89c2315b3343c651912d69f4a5de3005fe67e4a8b8cf4b78fdfd14726c0cc1
 
 I could track it with this:
 
-    docker ps 
+    docker container ls 
     CONTAINER ID  IMAGE  COMMAND          CREATED              STATUS              PORTS                    NAMES
     fe89c2315b33  coop   "/app/gobinary"  About a minute ago   Up About a minute   0.0.0.0:8081->8081/tcp   agitated_euclid
+    
+    docker container top coop
+    ps aux | grep coop
 
 That shows running containers.  To see them all regardless of status:
 
-    docker container ls --all
+    docker container ls -a
 
 Nnotice the strange names being assigned to containers, like agitated_euclid.  It seems the code for that is at https://github.com/moby/moby/blob/master/pkg/namesgenerator/names-generator.go.
 
-Also notice all the cruft of dangling (unused) images and containers.  These worked well for me:
+Also notice all the cruft of dangling (unused) images and containers.  Looks like you can remove ones like:
+
+    docker container rm -f <first 3 chars of id1> <first 3 chars of id2> ...
+
+But I tried this that worked well:
 
     docker system prune
     docker system prune -a # more aggressive

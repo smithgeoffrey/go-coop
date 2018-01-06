@@ -1,24 +1,18 @@
-# ELK
+# Logging
 
 ### Overview
 
-Log aggregation seems essential for a pipeline. I tried https://hub.docker.com/r/sebp/elk/ without luck.
-
-    docker pull sebp/elk
-    docker run -d -p 5601:5601 -p 9200:9200 -p 5044:5044 --name elk sebp/elk
-
-So I tried a raspberry pi specific one, at https://github.com/stefanwalther/rpi-docker-elk, using docker-compose:
+Log aggregation seems all but essential for, well, most things.  I tried a raspberry pi specific ELK at https://github.com/stefanwalther/rpi-docker-elk, using docker-compose:
 
     cd /opt/docker 
     git clone https://github.com/stefanwalther/rpi-docker-elk.git
     cd rpi-docker-elk/
     docker-compose up -d
 
-Getting some data in there is said to be a good start:
-
-    nc localhost 5000 < /var/log/jenkins/jenkins.log 
-
-Browse to Kibana and click the `create` button, to enable indexing:
+Browsed to Kibana and clicked the `create` button:
 
     http://<ip>:5601
-    http://<ip>:5601/app/sense
+
+But it was running separate containers for E, L & K, and the night after starting it, my pi hung on trying to SSH in.  I started shopping for something smaller, I could always come back to ELK.
+
+<find something less-is-more>

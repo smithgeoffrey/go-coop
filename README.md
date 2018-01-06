@@ -16,8 +16,8 @@ A pipeline is the primary goal. Running on a raspberry pi is a nicety for my use
 
 Logging and monitoring aren't optional.  Add a couple more containers:
 
-- try ELK: see ~/logging
-- try Prometheus: see ~/monitoring
+- see ~/logging
+- see ~/monitoring
 
 ### App
 
