@@ -13,6 +13,7 @@ Browsed to Kibana and clicked the `create` button:
 
     http://<ip>:5601
 
-But it was running separate containers for E, L & K, and the night after starting it, my pi hung on trying to SSH in.  I started shopping for something smaller, I could always come back to ELK.
+But it was running separate containers for E, L & K, and the night after starting it, my pi hung trying to SSH in.  I started shopping for something smaller, I could always come back.
 
-<find something less-is-more>
+I looked at https://blog.treasuredata.com/blog/2016/08/03/distributed-logging-architecture-in-the-container-era/ and wanted to try fluentd/hadoop.
+
