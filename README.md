@@ -2,7 +2,7 @@
 
 ### Pipeline
 
-A pipeline is the primary goal. Running on a raspberry pi is a nicety for my use case (and it's fun), but it's not overly important.  The project could run on any platform.
+Running on a raspberry pi is a nicety for my use case (and it's fun), but it's not overly important.  The project can run on any platform.
 
 - jenkins running locally on the pi  
   - polls version control of an app for each commit
@@ -14,14 +14,14 @@ A pipeline is the primary goal. Running on a raspberry pi is a nicety for my use
 
 ### Logging & Monitoring
 
-Logging and monitoring aren't optional.  Add a couple more containers:
+Add a couple more containers:
 
 - see ~/logging
 - see ~/monitoring
 
 ### App
 
-Python? Java? Great languages. I'd been wanting to try Go. It's a small, modern, self-contained ecosystem that compiles into a fast binary including dependencies for ease of deployment.  I've used it a little and I like it.  It has tendrils in dev and ops, and cloud and systems programming.  After I mature with it, I can play with best-in-class concurrency.  Here are the go books I've used, in order of my getting them:
+Python? Java? Super great languages. I'd been wanting something in between.  Go's a small, modern, self-contained ecosystem that compiles into a fast binary including dependencies for ease of deployment.  After I mature with it, I can play with best-in-class concurrency.  It has tendrils in dev and ops, and cloud programming. Here are the go books I've used, in order of my getting them:
 
 - `The Go Programming Language` by Donovan and Kernighan
 - `Go in Practice` by Butcher & Farina
