@@ -106,10 +106,16 @@ Jenkins will orchestrate the Go and Docker builds then handle post-build aspects
     BUILD
         
         EXECUTE SHELL
-        # prep a docker buildir having static content for the app
+        ## prep a docker buildir ##
+        
+        # static ui content for the app
         mkdir $WORKSPACE/docker && \
         cp -a $WORKSPACE/src/github.com/smithgeoffrey/go-coop/ui $WORKSPACE/docker && \
         rm -f $WORKSPACE/docker/ui/*.*
+        
+        # prometheus node_exporter
+        curl -SL https://github.com/prometheus/node_exporter/releases/download/v0.14.0/node_exporter-0.14.0.linux-armv7.tar.gz > $WORKSPACE/node_exporter.tar.gz && \
+        tar -xvf $WORKSPACE/node_exporter.tar.gz -C $WORKSPACE/docker/ --strip-components=1
 
         EXECUTE SHELL
         # build the app binary and put it in the docker buildir
@@ -125,14 +131,14 @@ Jenkins will orchestrate the Go and Docker builds then handle post-build aspects
         cat > Dockerfile << EOF
         FROM golang
         MAINTAINER Geoff Smith "smithgeoffrey123@gmail.com"
-        EXPOSE 8081
         
         WORKDIR /app
-        ADD gobinary .
-        ADD ui/ ./ui/
+        ADD     gobinary .
+        ADD     ui/ ./ui/
+        ADD     node_exporter /bin/
         
-        ENV PORT=8081
-        CMD ["/app/gobinary"]
+        EXPOSE 8081 9100
+        CMD ["/app/gobinary", "/bin/node_exporter"]
         EOF
     
         EXECUTE DOCKER COMMAND
