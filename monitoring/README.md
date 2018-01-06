@@ -1,13 +1,17 @@
 # Monitoring
 
-### Raspberry Pi
+Prometheus is an open source monitoring system that uses a multi-dimensional data-model and a powerful query language, allowing fine-tuned control and more accurate reporting.  It can be frontended with Grafana if the native PromDash isn't enough, and it has AlertManager for sending email or slack. [1]
+
+Here on the pi, run a Prometheus `server` as a container.  Then run `node_exporter` agents that expose host metrics.  Run the exporter on the pi itself and on containers running on the pi.
+
+### Expose Metrics on the Pi
 
 I tried a blog specific to raspberry pi at https://blog.alexellis.io/prometheus-nodeexporter-rpi/ (rpi setup) and https://blog.alexellis.io/prometheus-monitoring/ (prom generally).
 
     curl -SL https://github.com/prometheus/node_exporter/releases/download/v0.14.0/node_exporter-0.14.0.linux-armv7.tar.gz > node_exporter.tar.gz && \
     sudo tar -xvf node_exporter.tar.gz -C /usr/local/bin/ --strip-components=1
 
-Now create a systemd startup for it at /etc/systemd/system/prom_node_exporter.service [1]:
+Now create a systemd startup for it at /etc/systemd/system/prom_node_exporter.service [2]:
 
     [Unit]
     Description=Prometheus Node Exporter
@@ -22,22 +26,20 @@ Now create a systemd startup for it at /etc/systemd/system/prom_node_exporter.se
     WantedBy=multi-user.target
     Alias=prom.service
 
-Check the service logs:
+Verify locally:
 
+    # systemd log
     journalctl -u prom_node_exporter
     
-    Jan 05 19:14:44 pi1 systemd[1]: Starting Prometheus Node Exporter...
-    Jan 05 19:14:44 pi1 systemd[1]: Started Prometheus Node Exporter.
-    Jan 05 19:14:45 pi1 node_exporter[2816]: time="2018-01-05T19:14:45-05:00" level=info msg="Starting node_exporter (version=0.14.0
-    ...
-    Jan 05 19:14:45 pi1 node_exporter[2816]: time="2018-01-05T19:14:45-05:00" level=info msg="Listening on :9100" source="node_exporter.go:186"
-
-Check that the port is up:
-
-    root@pi1:/etc/systemd/system# netstat -antup | grep exporter    
+    # netstat
+    netstat -antup | grep exporter    
     tcp6       0      0 :::9100                 :::*                    LISTEN      2816/node_exporter
 
-### Containers on the Pi
+Browse to it remotely from your laptop:
+
+    http://<rpi>:9100/metrics
+
+### Expose Metrics of Containers Running on The Pi
 
 The above applies node_exporter to the pi itself and listens on the standard port 9100.  It would be nice to apply it to containers too, although they'd have to use a different, e.g., 9101, 9102, etc.  For example, the go app's docker file could extend for this:
 
@@ -55,4 +57,6 @@ Note that the port exposed is the standard 9100, but then we increment it when i
 
 ### References
 
-[1] See, e.g., https://coreos.com/os/docs/latest/getting-started-with-systemd.html#unit-file
+[1] https://www.digitalocean.com/community/tutorials/how-to-use-prometheus-to-monitor-your-centos-7-server
+
+[2] See, e.g., https://coreos.com/os/docs/latest/getting-started-with-systemd.html#unit-file
