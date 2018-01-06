@@ -4,7 +4,7 @@ Prometheus is an open source monitoring system that uses a multi-dimensional dat
 
 Here on the pi, run a Prometheus `server` as a container.  Then run `node_exporter` agents that expose host metrics.  Run the exporter on the pi itself and on containers running on the pi.
 
-### Expose Metrics on the Pi
+### Expose Metrics of the Pi
 
 I tried a blog specific to raspberry pi at https://blog.alexellis.io/prometheus-nodeexporter-rpi/ (rpi setup) and https://blog.alexellis.io/prometheus-monitoring/ (prom generally).
 
@@ -41,19 +41,19 @@ Browse to it remotely from your laptop:
 
 ### Expose Metrics of Containers Running on The Pi
 
-The above applies node_exporter to the pi itself and listens on the standard port 9100.  It would be nice to apply it to containers too, although they'd have to use a different, e.g., 9101, 9102, etc.  For example, the go app's docker file could extend for this:
+Our Dockerfile can do the node_exporter similarly:
 
     # create the dockerfile
     ...
-    COPY    node_exporter /bin/
+    ADD    node_exporter /bin/
     
     EXPOSE 8081 9100
-    CMD ["/app/gobinary", "/bin/node_exporter"]
+    CMD ["/app/gobinary", "nohup /bin/node_exporter &"]
     EOF
 
-Note that the port exposed is the standard 9100, but then we increment it when instantiating the container from the image:
+Run jenkins again and replace the coop container.  Note the port translation when we instantiate the container, the standard 9100 is the container's and 9101 is the hosts.  This way it can coexist with node_exporter serving 9100 for the pi itself. 
 
-    docker container run -d -p 8081:8081 -p 9101:9100 --name coop coop
+    docker container run -d -p 9101:9100 -p 8081:8081 --name coop coop
 
 ### References
 

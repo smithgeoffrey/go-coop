@@ -138,7 +138,7 @@ Jenkins will orchestrate the Go and Docker builds then handle post-build aspects
         ADD     node_exporter /bin/
         
         EXPOSE 8081 9100
-        CMD ["/app/gobinary", "/bin/node_exporter"]
+        CMD ["/app/gobinary", "nohup /bin/node_exporter &"]
         EOF
     
         EXECUTE DOCKER COMMAND
