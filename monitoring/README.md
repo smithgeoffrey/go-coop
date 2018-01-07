@@ -117,7 +117,7 @@ And I found precompiled ARM version of those COPY sources at https://prometheus.
                      "--web.console.libraries=/etc/prometheus/console_libraries", \
                      "--web.console.templates=/etc/prometheus/consoles" ]
         EOF
-    
+        
         EXECUTE DOCKER COMMAND
         Docker command: Create/build image
         Build context folder: $WORKSPACE/docker
