@@ -1,10 +1,11 @@
 # Monitoring
 
 Prometheus is an open source monitoring system [1]:
-  - frontend with Grafana if native PromDash isn't enough
-  - send email or slack with native AlertManager
+
+  - send opsgenie, email or slack with AlertManager
   - node_exporter host agent for OS-level metrics like cpu/mem/disk
   - blackbox_exporter for traditional nagios-like checks  
+  - frontend with 3rd party Grafana if native PromDash isn't enough
 
 ### Expose Host Metrics with Node Exporter
 
@@ -41,7 +42,6 @@ Run the server as a container.  Dockerhub at https://hub.docker.com/r/prom/prome
     
     COPY prometheus                             /bin/prometheus
     COPY promtool                               /bin/promtool
-    COPY documentation/examples/prometheus.yml  /etc/prometheus/prometheus.yml
     COPY console_libraries/                     /etc/prometheus/
     COPY consoles/                              /etc/prometheus/
     
@@ -54,13 +54,11 @@ Run the server as a container.  Dockerhub at https://hub.docker.com/r/prom/prome
                  "-web.console.libraries=/etc/prometheus/console_libraries", \
                  "-web.console.templates=/etc/prometheus/consoles" ]
 
-I created a Jenkins job doing that, first downloading their repo:
+And I found precompiled ARM version of those COPY sources at https://prometheus.io/download/#prometheus.  Here's a summary of the Jenkins job I'm using.  Note that I had to accommodate a change in the flags from what was suggested above in the CMD section of the Dockerfile, per https://prometheus.io/blog/2017/06/21/prometheus-20-alpha3-new-rule-format/.  Also, I had to add some management of /etc/prometheus.yml not suggested above but dicussed at https://prometheus.io/docs/prometheus/latest/installation/.
 
     SOURCE CODE MANAGEMENT
         
-        REPOSITORIES
-        https://github.com/prometheus/prometheus
-        */master
+        NONE
                 
     BUILD ENVIRONMENT
     
@@ -68,7 +66,36 @@ I created a Jenkins job doing that, first downloading their repo:
         Add timestamps to console output
             
     BUILD
-    
+
+        EXECUTE SHELL
+        # prep a docker buildir        
+        mkdir $WORKSPACE/docker && \
+        curl -SL https://github.com/prometheus/prometheus/releases/download/v2.0.0/prometheus-2.0.0.linux-armv7.tar.gz > $WORKSPACE/prometheus.tar.gz && \
+        tar -xvf $WORKSPACE/prometheus.tar.gz -C $WORKSPACE/docker/ --strip-components=1
+        
+        EXECUTE SHELL
+        # handle config file in Jenkins for now
+        cat > $WORKSPACE/docker/prometheus.yml << EOF
+        global:
+          scrape_interval:     15s 
+          evaluation_interval: 15s 
+
+        alerting:
+          alertmanagers:
+          - static_configs:
+            - targets:
+              # - alertmanager:9093
+        
+        rule_files:
+          # - "first_rules.yml"
+          # - "second_rules.yml"
+        
+        scrape_configs:
+          - job_name: 'prometheus'
+            static_configs:
+              - targets: ['localhost:9090']
+        EOF
+        
         EXECUTE SHELL
         # create the dockerfile
         cd $WORKSPACE/docker && \
@@ -76,9 +103,9 @@ I created a Jenkins job doing that, first downloading their repo:
         FROM        quay.io/prometheus/busybox:latest
         MAINTAINER  The Prometheus Authors <prometheus-developers@googlegroups.com>
         
-        COPY cmd/prometheus                             /bin/prometheus
-        COPY cmd/promtool                               /bin/promtool
-        COPY documentation/examples/prometheus.yml  /etc/prometheus/prometheus.yml
+        COPY prometheus                             /bin/prometheus
+        COPY promtool                               /bin/promtool
+        COPY prometheus.yml                         /etc/prometheus/
         COPY console_libraries/                     /etc/prometheus/
         COPY consoles/                              /etc/prometheus/
         
@@ -86,15 +113,14 @@ I created a Jenkins job doing that, first downloading their repo:
         VOLUME     [ "/prometheus" ]
         WORKDIR    /prometheus
         ENTRYPOINT [ "/bin/prometheus" ]
-        CMD        [ "-config.file=/etc/prometheus/prometheus.yml", \
-                     "-storage.local.path=/prometheus", \
-                     "-web.console.libraries=/etc/prometheus/console_libraries", \
-                     "-web.console.templates=/etc/prometheus/consoles" ]
+        CMD        [ "--config.file=/etc/prometheus/prometheus.yml", \
+                     "--web.console.libraries=/etc/prometheus/console_libraries", \
+                     "--web.console.templates=/etc/prometheus/consoles" ]
         EOF
     
         EXECUTE DOCKER COMMAND
         Docker command: Create/build image
-        Build context folder: $WORKSPACE
+        Build context folder: $WORKSPACE/docker
         Tag of the resulting docker image: geoff-prometheus
     
     POST-BUILD ACTIONS
