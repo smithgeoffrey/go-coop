@@ -2,7 +2,15 @@
 
 ### Overview
 
-Log aggregation seems essential.  I tried a raspberry pi specific ELK at https://github.com/stefanwalther/rpi-docker-elk, using docker-compose:
+Log aggregation for the pipeline feels like a good idea.  Assuming an ELK stack were already up, all we'd need is a way to push to it with a small client.  Docker has a native logdriver for fluentd.  I found a blog showing it's use with springboot containers pushing logs to ELK: https://programmaticponderings.com/2017/04/10/streaming-docker-logs-to-the-elastic-stack-using-fluentd/.
+
+Running ELK on the pi caused a crash on first try. [1] As a development exercise, I should be able to run ELK more smoothly as a container on my mac, and test containers on the pi push their logs to it.
+
+<dev out fluentd pushing to ELK here>
+
+### References
+
+[1] I tried a raspberry pi specific ELK at https://github.com/stefanwalther/rpi-docker-elk, using docker-compose:
 
     cd /opt/docker 
     git clone https://github.com/stefanwalther/rpi-docker-elk.git
@@ -10,8 +18,4 @@ Log aggregation seems essential.  I tried a raspberry pi specific ELK at https:/
     docker-compose up -d
     http://<ip>:5601
 
-But it was running separate containers for E, L & K that feels heavy, and the night after starting it, my pi hung trying to SSH in, forcing me to reboot.  I started shopping for something simpler and smaller.  I found https://blog.treasuredata.com/blog/2016/08/03/distributed-logging-architecture-in-the-container-era/ which raised fluentd for me. 
-
-Rather than running ELK on the pi, just use a native logdriver in Docker to push logs to ELK. Docker has a fluentd logdriver, and I found a blog showing it's use with springboot containers pushing logs to ELK: https://programmaticponderings.com/2017/04/10/streaming-docker-logs-to-the-elastic-stack-using-fluentd/.
-
-<dev out fluentd pushing to ELK here>
+But it was running separate containers for E, L & K that felt heavy, and the night after starting it, my pi hung trying to SSH in, forcing me to reboot.  
