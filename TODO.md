@@ -4,10 +4,6 @@
 
 Panics unlike errors should be used sparingly and with intention.  Here I'll start by ignoring panics in favor of error handling.  After I've laid down the error handling and have a sense of finality with it, I'll loop back and consider injecting any panic's that may make sense.
 
-### Testing
-
-I wanted to keep testing as a top level package, until I read that may be a no no in go.  I'll have to figure this out.
-
 ### Errors
 
 I'm learning that Go unlike other languages doesn't place much importance on the overhead of custom error types: most errors have no special attributes that would be better conveyed by a special error type. This jives with some of my past experiences, and until I stumble on cause to expand, I'll just use the std lib's base error type.

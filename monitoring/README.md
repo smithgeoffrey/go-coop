@@ -1,29 +1,19 @@
 # Monitoring
 
-Monitoring for the pipeline feels like a good idea. Prometheus is an open source monitoring system that lets you [1]:
+Prometheus is an open source monitoring system that lets you [1]:
 
   - scrape metrics, counters, gauges and histograms over HTTP
-  - communicate to opsgenie, email or slack (AlertManager)
+  - communicate to opsgenie, email or slack (alert_manager)
   - agent for OS-level metrics like cpu/mem/disk (node_exporter)
   - traditional nagios-like checks (blackbox_exporter) 
-  - frontend with 3rd party Grafana if native PromDash isn't enough
 
-### Frontend with Grafana
-
-I tried https://hub.docker.com/r/joseba/rpi-grafana/:
+You can frontend with Grafana which has native suppport for Prometheus as a datasource.  I tried https://hub.docker.com/r/joseba/rpi-grafana/:
 
     docker volume create grafana_data
     docker run -d -p 3000:3000 -v grafana_data:/data joseba/rpi-grafana
-
-Then add a datasource being your Prometheus server at:
-
     http://<rpi>:9090
 
-### Prometheus Server
-
-Here we'll run Prometheus server on 9090 as a container on the pi, so Grafana can consume it.  Compared to a Dockerfile suggested at https://hub.docker.com/r/prom/prometheus/~/dockerfile/, I had to use the new flag format in the CMD section per https://prometheus.io/blog/2017/06/21/prometheus-20-alpha3-new-rule-format/.  I also had to add some management of /etc/prometheus.yml dicussed, e.g., at https://prometheus.io/docs/prometheus/latest/installation/.  ARM versions of the COPY sources I found at https://prometheus.io/download/#prometheus.
-
-Here's a summary of the Jenkins job I'm using. 
+For Prometheus, I found a suggested Dockerfile at https://hub.docker.com/r/prom/prometheus/~/dockerfile/.  I had to use the new flag format in the CMD section per https://prometheus.io/blog/2017/06/21/prometheus-20-alpha3-new-rule-format/.  I also had to add some management of /etc/prometheus.yml dicussed at https://prometheus.io/docs/prometheus/latest/installation/.  ARM versions of the COPY sources I found at https://prometheus.io/download/#prometheus. Here's a summary of the Jenkins job I'm using. 
 
     SOURCE CODE MANAGEMENT
         
@@ -97,9 +87,7 @@ Here's a summary of the Jenkins job I'm using.
         SLACK NOTIFICATIONS
         notify failure, success & back to normal
 
-### Expose Host Metrics with Node Exporter
-
-Above we setup a Prometheus server to collect metrics.  To get host metrics like cpu/mem/disk, we can run an agent called node_exporter per host. E.g., we can install node_exporter directly on the pi itself and, possibly, per container running on the pi. I followed https://blog.alexellis.io/prometheus-nodeexporter-rpi/ for installing on the pi itself:
+We can run an agent called node_exporter per host, that lets Prometheus poll the agent. I followed https://blog.alexellis.io/prometheus-nodeexporter-rpi/ for installing on the pi itself:
 
     curl -SL https://github.com/prometheus/node_exporter/releases/download/v0.14.0/node_exporter-0.14.0.linux-armv7.tar.gz > node_exporter.tar.gz && \
     sudo tar -xvf node_exporter.tar.gz -C /usr/local/bin/ --strip-components=1
