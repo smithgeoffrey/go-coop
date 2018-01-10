@@ -46,28 +46,20 @@ We just created a type and applied a method to it that satisfies the interface. 
         return err
     }
 
-### Ideas
+### Not Reterning nil for Response when Error
 
-One usage I've seen in the wild is don't return nil on the result when there's an error, instead return if possible the empty value of the type expected.  That enables users of your library to streamline their use of your lib to do things like this pseudo code:
-
-    ## geoff package that returns an error
-    import errors
-    
-    func Chickens(arg1) (string, error) {
-        ...
-        
-        // error case
-        return "", errors.New("snafu happened")
-    }
+One usage I've seen in the wild is don't always return nil on the result when there's an error, instead return if possible the empty value of the type expected.  Nil is fine if there isn't one.  This enables users of your library to streamline their use of your lib to do things like this pseudo code:
 
     ## users of geoff package have the option to ignore 
     ## the error via `_` and work off the result instead 
-    ## as desired
-    import geoff.Chickens
+
+    import geoff
     
     res, _ := geoff.Chickens(arg1)
 
-Another guideline I've seen and want to try is, when handling errors, to collapse the underlying call that is to be error handled into the error handling conditional itself.  It leverages Go's if statement having an optional assignment clause before the expression.  Something like:
+### Embed The Underlying Call into the Error Conditional
+
+Another thing you'll see in the wild is collapsing the underlying call into the error handling conditional itself.  It leverages Go's if statement having an optional assignment clause before the expression.  Something like:
  
     if res, err := geoff.Chickens(arg1); err != nil {
         fmt.Printf("Error: %s\n", err)
