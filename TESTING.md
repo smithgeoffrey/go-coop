@@ -9,7 +9,7 @@ Originally I wanted to keep testing as a top level directory, it's own package. 
     foo/source.go
     foo/source_test.go
 
-Any go source file ending in `_test.go` is treated as a test file by `go test`.  In a _test.go file you create functions starting in `Test` that take one param `*Testing.T`:
+Any go source file ending in `_test.go` is treated as a test file by `go test`.  In a _test.go file you create functions starting in `Test` that take a param `*testing.T`:
 
     package foo
     
@@ -18,8 +18,6 @@ Any go source file ending in `_test.go` is treated as a test file by `go test`. 
     func TestBar(t *testing.T) {
         <insert>
     }
-
-
 
 ### Breadcrumbs
 
