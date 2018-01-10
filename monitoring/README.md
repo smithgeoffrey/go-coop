@@ -7,11 +7,15 @@ Prometheus is an open source monitoring system that lets you [1]:
   - agent for OS-level metrics like cpu/mem/disk (node_exporter)
   - traditional nagios-like checks (blackbox_exporter) 
 
+### Grafana Frontend
+
 You can frontend with Grafana which has native suppport for Prometheus as a datasource.  I tried https://hub.docker.com/r/joseba/rpi-grafana/:
 
     docker volume create grafana_data
     docker run -d -p 3000:3000 -v grafana_data:/data joseba/rpi-grafana
-    http://<rpi>:9090
+    http://<rpi>:3000
+
+### Jenkins Job for Prom Server
 
 For Prometheus, I found a suggested Dockerfile at https://hub.docker.com/r/prom/prometheus/~/dockerfile/.  I had to use the new flag format in the CMD section per https://prometheus.io/blog/2017/06/21/prometheus-20-alpha3-new-rule-format/.  I also had to add some management of /etc/prometheus.yml dicussed at https://prometheus.io/docs/prometheus/latest/installation/.  ARM versions of the COPY sources I found at https://prometheus.io/download/#prometheus. Here's a summary of the Jenkins job I'm using. 
 
@@ -87,7 +91,9 @@ For Prometheus, I found a suggested Dockerfile at https://hub.docker.com/r/prom/
         SLACK NOTIFICATIONS
         notify failure, success & back to normal
 
-We can run an agent called node_exporter per host, that lets Prometheus poll the agent. I followed https://blog.alexellis.io/prometheus-nodeexporter-rpi/ for installing on the pi itself:
+### Node Exporter Agent for the Pi
+
+We can run an agent called node_exporter per host that lets Prometheus poll the agent. I followed https://blog.alexellis.io/prometheus-nodeexporter-rpi/ for installing on the pi itself:
 
     curl -SL https://github.com/prometheus/node_exporter/releases/download/v0.14.0/node_exporter-0.14.0.linux-armv7.tar.gz > node_exporter.tar.gz && \
     sudo tar -xvf node_exporter.tar.gz -C /usr/local/bin/ --strip-components=1
@@ -111,6 +117,8 @@ Browse to node exporter's port (9090) from your laptop and you should see data a
 
     http://<rpi>:9100/metrics
 
+### Node Exporter Agent for the Containers?
+
 For the containers themselves (not just the rpi), our Dockerfile can do the node_exporter similarly:
 
     # create the dockerfile
@@ -121,15 +129,20 @@ For the containers themselves (not just the rpi), our Dockerfile can do the node
     CMD ["/app/gobinary", "nohup /bin/node_exporter &"]
     EOF
 
-Run jenkins again and replace the coop container.  Note the port translation when we instantiate the container, the standard 9100 is the container's and 9101 is the hosts.  This way it can coexist with node_exporter serving 9100 for the pi itself. 
+When running the container, I tried a port transform to masquerade an incremented port at the host level (9101:9100) because the default was already taken by node_exporter on the pi: 
 
     docker container run -d -p 9101:9100 -p 8081:8081 --name coop coop
 
-<insert discussion about issues with this approach>
+This approach has problems.  Managing the port transform is cumbersome as the number of containers scales.  There's also sentiment I'm finding in the community that node exporter isn't intended to be run in containers for various reasons including that the underlying metrics are sub optimal. [3]  My approach for now will be to run node_export per host not per container.
+
+But see here https://medium.com/@soumyadipde/monitoring-in-docker-stacks-its-that-easy-with-prometheus-5d71c1042443.
 
 ### References
 
-[1] See https://blog.alexellis.io/prometheus-monitoring/ and
+[1] https://blog.alexellis.io/prometheus-monitoring/
 https://www.digitalocean.com/community/tutorials/how-to-use-prometheus-to-monitor-your-centos-7-server
 
-[2] See, e.g., https://coreos.com/os/docs/latest/getting-started-with-systemd.html#unit-file
+[2] https://coreos.com/os/docs/latest/getting-started-with-systemd.html#unit-file
+
+[3] https://github.com/prometheus/node_exporter/issues/66 
+https://github.com/prometheus/node_exporter/issues/474

@@ -1,8 +1,6 @@
 # Pipeline 
 
-### For the App
-
-Jenkins will orchestrate the Go and Docker builds then handle post-build aspects of testing, publishing and deploying.  Here's a list of ongoing setup in a Jenkins job I'm running:
+Jenkins orchestrates the Go and Docker builds then handles post-build aspects of testing, publishing and deploying. Here's a list of ongoing setup in a Jenkins job I'm running:
 
     SOURCE CODE MANAGEMENT
         
@@ -26,13 +24,11 @@ Jenkins will orchestrate the Go and Docker builds then handle post-build aspects
     BUILD
         
         EXECUTE SHELL
-        ## prep a docker buildir ##
-        
+        # prep a docker buildir
+        mkdir $WORKSPACE/docker && \        
         # static ui content for the app
-        mkdir $WORKSPACE/docker && \
         cp -a $WORKSPACE/src/github.com/smithgeoffrey/go-coop/ui $WORKSPACE/docker && \
         rm -f $WORKSPACE/docker/ui/*.*
-        
         # prometheus node_exporter
         curl -SL https://github.com/prometheus/node_exporter/releases/download/v0.14.0/node_exporter-0.14.0.linux-armv7.tar.gz > $WORKSPACE/node_exporter.tar.gz && \
         tar -xvf $WORKSPACE/node_exporter.tar.gz -C $WORKSPACE/docker/ --strip-components=1
