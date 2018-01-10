@@ -1,10 +1,8 @@
-# ERRORS
+# ERROR HANDLING
 
-Panics unlike errors should be used sparingly.  Here I'll start by focusing on errors.
+Panics unlike errors should be used sparingly.  I'll start by focusing on errors.  Go chose not to do the try-catch thing, which takes some getting used to.
 
-### Errors
-
-Go unlike other languages doesn't seem to place much importance on the overhead of custom error types: most errors have no special attributes that would be better conveyed by a special error type. Until I stumble on cause to expand, I'll just use the std lib's base error type.
+Also unlike other languages, Go doesn't seem to place much importance on the overhead of custom error types: most errors have no special attributes that would be better conveyed by a special type. I don't think it's overly difficult to if wanted, but I'll steer toward using the base type absent more.
 
 One guideline I've seen and want to try is don't return nil on the result when there's an error, instead return if possible the empty value of the type expected.  That enables users of your library to streamline their use of your lib to do things like this pseudo code:
 
