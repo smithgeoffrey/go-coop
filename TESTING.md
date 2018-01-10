@@ -1,13 +1,11 @@
 # Testing
 
-### Overview
-
-There's a few things about Go's testing that sets it apart:
+Go approach to testing is a little different:
   
-- no heavy focus on assertion tools
+- no heavy use of assertion tools
 - test code and main code live side by side, not in a separate dir or package
 
-A supposed benefit of the latter includes making it possible to test unexported code as well as the public API.  I'll start with this approach here:
+A supposed benefit of the latter includes making it possible to test unexported code as well as the public API. I'll try it:
 
     foo/source.go
     foo/source_test.go
