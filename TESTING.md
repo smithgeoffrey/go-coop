@@ -1,4 +1,4 @@
-# Testing in Go
+# Testing
 
 ### Overview
 
