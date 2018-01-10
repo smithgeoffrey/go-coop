@@ -12,6 +12,7 @@ Here's some suedo code to show the idea:
     func func1() (string, error) {
         if <error condition> {
             return "", error.New("My error message")
+        }
         return "my response", nil 
     }
     
