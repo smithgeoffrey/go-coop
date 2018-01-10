@@ -1,6 +1,6 @@
 # OO
 
-Go's approach to OO sets it apart:
+Go's approach is a little differentt:
 
 - no inheritance
 - composition
@@ -8,9 +8,9 @@ Go's approach to OO sets it apart:
 I've heard it touched upon in different ways:
 
 - Not `is a __` but `has a __`
-- "Instead of building large trees of object types, the Go developer creates interfaces that describe desired behavior." [1]
+- "Instead of building large trees of object types, create interfaces that describe desired behavior." [1]
 
-From my own experience, Go's answer to OO is that they give you, for any type, methods and interfaces.  Even less, I've been using just methods.  Structs already get me what feels like an object having properties. By adding methods, I feel mostly there.  Interfaces can fill any gap.  I like the smallness of it in concept.
+From my own experience, Go's answer to OO is that they give you, for any type, methods and interfaces.  Even less, I've been using just methods.  Structs already get me what feels like an object having properties. By adding methods, I feel mostly there.  Any gap should be fillable with interfaces, when I get there. I like the smallness of it in concept.
 
 ### References
 
