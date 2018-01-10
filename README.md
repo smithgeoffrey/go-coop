@@ -41,11 +41,11 @@ Even more loosely, I browsed some tutorials on webapps using go/gin. [4]  I want
 
     GENERALLY
     - keep everything broken out and modular so the structure looks simple and clean even as the app grows
-    - use dependency managment [5]
+    - use dependency management [5]
     - use a debugger [6]
     
     TESTING
-    - include testing as a top-level package, a first-class citizen
+    - include testing as a first-class citizen
     - play with mocking
     - play with continuously building/testing the app
     
@@ -123,7 +123,7 @@ http://cgrant.io/tutorials/go/simple-crud-api-with-go-gin-and-gorm/
 
 [5] I want to try vendoring with `https://github.com/golang/dep`.  I installed it using `brew install dep` (laptop) and `go get -u github.com/golang/dep/...` (raspberry pi). 
 
-[6] See https://lincolnloop.com/blog/debugging-go-code/.  I want to try delv versus godebug at https://github.com/derekparker/delve and https://github.com/mailgun/godebug, respectively, and whatever my IDE has if anything.
+[6] It looks like Go may not be overly debugger-centric unlike others languages.  But see https://lincolnloop.com/blog/debugging-go-code/.  I want to try delv versus godebug at https://github.com/derekparker/delve and https://github.com/mailgun/godebug, respectively, and whatever my IDE has if anything.
 
 [7] I installed postgres on the pi via:
 
