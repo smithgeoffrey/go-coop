@@ -1,16 +1,16 @@
 # Testing
 
-Go approach to testing is a little different:
+Go's approach to testing is a little different:
   
 - no heavy use of assertion tools
-- test code and main code live side by side, not in a separate dir or package
+- test code lives with main code, not in a separate dir or package
 
 A supposed benefit of the latter includes making it possible to test unexported code as well as the public API. I'll try it:
 
     foo/source.go
     foo/source_test.go
 
-Any go source file ending in `_test.go` is treated as a test file by `go test`.  In a _test.go file you create functions starting in `Test` that take a param `*testing.T`:
+Any go source file ending in `_test.go` is treated as a test file by `go test`.  In a _test.go file you create functions starting in `Test` that take an argument `*testing.T`:
 
     package foo
     
