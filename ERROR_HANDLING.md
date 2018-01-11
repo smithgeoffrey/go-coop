@@ -29,7 +29,7 @@ There's also an understanding of the Error interface in Go:
         Error() string
     }
 
-Because anything that implements it is an Error, you can create custom error types:  
+Because anything that implements it is an Error, you can create custom error types:  just create a type and apply a method to it that satisfies the error interface:  
 
     type ErrorChickenDoorJammed struct {
         message string
@@ -39,15 +39,30 @@ Because anything that implements it is an Error, you can create custom error typ
         return e.message
     }
 
-We just created a type and applied a method to it that satisfies the interface.  Hence the arbitrary type has become a custom error type.  Having one isn't much fun if you don't use it:
+One possible use is a way to parse err based on type: [1]  I haven't used this pattern yet but I'll give it a try.
 
-    func HelperFuncToReturnTheCustomError(message string) *ErrorChickenDoorJammed {
-        # instantiate the error object then return it
-        err := &ErrorChickenDoorJammed{message: message}
-        return err
+    import fmt
+    
+    func foo() (string, *ErrorChickenDoorJammed) {
+        if <door is jammed> {
+            return "", &ErrorChickenDoorJammed{message: "custom error messages"}
+        }
+        return "success", nil
     }
+    
+    # now consume it and test for err type
+    res, err := foo()
+    if err != nil {
+        switch err.(type) {
+        case *ErrorChickenDoorJammed:
+            # now you know why
+            fmt.Println(err.Error())
+        default:
+            fmt.Println("Error: not sure why")
+        }
+    }        
 
-### Not Reterning nil for Response when Error
+### Not Returning nil for Response when Error
 
 One usage I've seen in the wild is don't always return nil on the result when there's an error, instead return if possible the empty value of the type expected.  Nil is fine if there isn't one.  This enables users of your library to streamline their use of your lib to do things like this pseudo code:
 
@@ -72,3 +87,7 @@ Compare to how I had generally thought of it, below.
     if err != nil {
         fmt.Printf("Error: %s\n", err)
     }
+
+### References
+
+[1] https://medium.com/@sebdah/go-best-practices-error-handling-2d15e1f0c5ee
