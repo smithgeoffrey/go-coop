@@ -68,7 +68,7 @@ One usage I've seen in the wild is don't always return nil on the result when th
 
     ## users of geoff package have the option to ignore 
     ## the error via `_` and work off the result instead 
-
+    
     import geoff
     
     res, _ := geoff.Chickens(arg1)

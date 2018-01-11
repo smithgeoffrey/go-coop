@@ -1,14 +1,15 @@
 # Testing
 
-Go's approach to testing is a little different:
-  
-- no heavy use of assertion tools
-- test code lives with main code, not in a separate dir or package
+### Not In A Separate Dir Or Package
 
-A supposed benefit of the latter includes making it possible to test unexported code as well as the public API. I'll try it:
+- test code lives with main code
+
+A supposed benefit includes making it possible to test unexported code as well as the public API. I'll try it in this project:
 
     foo/source.go
     foo/source_test.go
+
+### _test.go, go test & *testing.T
 
 Any go source file ending in `_test.go` is treated as a test file by `go test`.  In a _test.go file you create functions starting in `Test` that take an argument `*testing.T`:
 
@@ -19,6 +20,38 @@ Any go source file ending in `_test.go` is treated as a test file by `go test`. 
     func TestBar(t *testing.T) {
         <insert>
     }
+
+### Assertions
+
+If you want common assertions and mocks, see https://github.com/stretchr/testify.
+
+import (
+  "testing"
+  "github.com/stretchr/testify/assert"
+)
+
+func TestSomething(t *testing.T) {
+
+  // assert equality
+  assert.Equal(t, 123, 123, "they should be equal")
+
+  // assert inequality
+  assert.NotEqual(t, 123, 456, "they should not be equal")
+
+  // assert for nil (good for errors)
+  assert.Nil(t, object)
+
+  // assert for not nil (good when you expect something)
+  if assert.NotNil(t, object) {
+
+    // now we know that object isn't nil, we are safe to make
+    // further assertions without causing any errors
+    assert.Equal(t, "Something", object.Value)
+
+  }
+
+}    
+    
 
 ### Breadcrumbs
 
