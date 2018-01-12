@@ -25,33 +25,49 @@ Any go source file ending in `_test.go` is treated as a test file by `go test`. 
 
 If you want common assertions and mocks, see https://github.com/stretchr/testify.
 
-import (
-  "testing"
-  "github.com/stretchr/testify/assert"
-)
-
-func TestSomething(t *testing.T) {
-
-  // assert equality
-  assert.Equal(t, 123, 123, "they should be equal")
-
-  // assert inequality
-  assert.NotEqual(t, 123, 456, "they should not be equal")
-
-  // assert for nil (good for errors)
-  assert.Nil(t, object)
-
-  // assert for not nil (good when you expect something)
-  if assert.NotNil(t, object) {
-
-    // now we know that object isn't nil, we are safe to make
-    // further assertions without causing any errors
-    assert.Equal(t, "Something", object.Value)
-
-  }
-
-}    
+    import (
+      "errors"
+      "testing"
+      "github.com/stretchr/testify/assert"
+    )
     
+    func TestSomething(t *testing.T) {
+      res, err := fun1()
+      assert.IsType(t, error, err)
+      assert.Equal(t, <expected res>, res, "should be equal")
+      assert.NotEqual(t, <expected not res>, res, "should be not equal")
+      assert.Nil(t, object)
+      if assert.NotNil(t, object) {
+        // further assertions without causing any nil errors
+        assert.Equal(t, "Something", object.Value)
+      }
+    }    
+
+Some like to load tests into a structure of some kind then iterate over it for testing:
+
+    type MyError struct {
+        message string
+    }
+    
+    func (e *MyError) Error() string {
+        return e.message
+    }
+    
+    type Tests struct {
+        result string
+        err MyError
+    }
+    
+    func TestGetDoor(t *testing.T) {
+        myerr := MyError{message: "customer error message"}
+        tests := []Tests{
+            {result: "foo", err: myerr},
+            {result: "bar", err: myerr},
+        }
+        for _, test := range tests {
+            <todo>
+        }
+    }
 
 ### Breadcrumbs
 
