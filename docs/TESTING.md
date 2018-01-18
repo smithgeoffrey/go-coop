@@ -23,7 +23,7 @@ Any go source file ending in `_test.go` is treated as a test file by `go test`. 
 
 ### Assertions
 
-If you want common assertions and mocks, see https://github.com/stretchr/testify.
+For assertions use https://github.com/stretchr/testify.
 
     import (
       "errors"
@@ -43,31 +43,32 @@ If you want common assertions and mocks, see https://github.com/stretchr/testify
       }
     }    
 
-Some like to load tests into a structure of some kind then iterate over it for testing:
+Some like to load tests into a structure of some kind then iterate over it for testing different inputs or mock responses:
 
-    type MyError struct {
-        message string
-    }
-    
-    func (e *MyError) Error() string {
-        return e.message
-    }
-    
+    import "testify"
+        
     type Tests struct {
         result string
         err MyError
     }
     
     func TestGetDoor(t *testing.T) {
-        myerr := MyError{message: "customer error message"}
+        result, err := dosomething(arg1)
         tests := []Tests{
-            {result: "foo", err: myerr},
-            {result: "bar", err: myerr},
+            {result: "foo", err: error},
+            {result: "bar", err: error},
         }
         for _, test := range tests {
-            <todo>
+            <asserts>
         }
     }
+
+### Mocking Interfaces
+
+Interface mocking is a typical component of testing.  To avoid boilerplate coding required to do it, try https://github.com/vektra/mockery.
+
+
+
 
 ### Breadcrumbs
 
