@@ -1,6 +1,9 @@
 # ERROR HANDLING
 
-Go's approach to error handling is a little different, mostly centered around there being no try-catch and functions returning response/error pairs.
+Go's approach to error handling is a little different, mostly centered around:
+
+- no try-catch
+- functions return response-error pairs
 
 ### Error Returns with Response
  
@@ -11,7 +14,7 @@ Here's some suedo code to show the idea:
     
     func func1() (string, error) {
         if <error condition> {
-            return "", error.New("My error message")
+            return "", errors.New("My error message")
         }
         return "my response", nil 
     }
@@ -29,7 +32,7 @@ There's also an understanding of the Error interface in Go:
         Error() string
     }
 
-Because anything that implements it is an Error, you can create custom error types:  just create a type and apply a method to it that satisfies the error interface:  
+Because anything that implements it is an Error, you can create custom error types.  Just create a type and apply a method to it that satisfies the error interface:  
 
     type ErrorChickenDoorJammed struct {
         message string

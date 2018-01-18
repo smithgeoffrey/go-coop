@@ -65,10 +65,7 @@ Some like to load tests into a structure of some kind then iterate over it for t
 
 ### Mocking Interfaces
 
-Interface mocking is a typical component of testing.  To avoid boilerplate coding required to do it, try https://github.com/vektra/mockery.
-
-
-
+Interface mocking is a typical component of testing.  Apparently this ends up having a bunch of boilerplate, which can reduced by using a lib like https://github.com/vektra/mockery.  But here I want to start basic, with little scaffolding.
 
 ### Breadcrumbs
 

@@ -2,7 +2,7 @@
 
 ### Pipeline
 
-Running on a raspberry pi is a nicety for my use case (and it's fun), but it's not overly important.  The project can run on any platform.
+Running on a raspberry pi is a nicety for my use case:
 
 - jenkins running locally on the pi  
   - polls version control of an app for each commit

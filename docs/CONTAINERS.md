@@ -1,10 +1,6 @@
 # Containers 
 
-Docker we're using in the pipeline component for the App and for the monitoring.  You can see the readme's for ~/pipeline and ~/monitoring.  
-
-But here I wanted to have a place to gather breadcrumbs and cheatsheet type stuff re Docker.
-
-It will start really really simple and likely progress toward more complex concepts.
+We're using Docker containers to run the App and Monitoring components of this project.  See ~/pipeline and ~/monitoring for more on that.  But here I wanted to gather breadcrumbs and a cheatsheet aspect re Docker.
 
 ### Performance 
 
@@ -17,12 +13,12 @@ More sophisticated container monitoring solutions are expected.  But first consi
 ### Interactive
 
 - docker container run -it 
-- docker container start -ai 
+- docker container start -ia 
 - docker container exec -it 
 
 ### Networking
 
-Overview:
+Generally:
 
 - private virtual network bridge (docker0) per container
 - host NIC does outbound NAT per VN
@@ -44,11 +40,10 @@ Commands:
 
 ### DNS
 
-If you create a non-default network, for free you get 
+If you create a non-default network, for free you get: 
 
     automatic DNS resolution for all containers on the newtork using their container names
 
 E.g., if on a non-default network:
 
     docker container exec -it <source container name> ping <dest container name>
-
