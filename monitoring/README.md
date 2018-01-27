@@ -1,6 +1,6 @@
 # Monitoring
 
-Prometheus is an open source monitoring system that lets you [1]:
+Yes, this is just backyard chickens.  But we're doing devops here, so we can't skimp on monitoring.  Prometheus is an open source monitoring system that lets you [1]:
 
   - scrape metrics, counters, gauges and histograms over HTTP
   - communicate to opsgenie, email or slack (alert_manager)
