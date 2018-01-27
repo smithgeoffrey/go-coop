@@ -7,7 +7,7 @@ import (
 	"github.com/smithgeoffrey/go-coop/ui"
 )
 
-func initializeRoutes(router *gin.Engine) {
+func initialize(router *gin.Engine) {
 	r1 := router.Group("/api/v1")
 	{
 		r1.GET("/sensor/door", api.GetDoor)

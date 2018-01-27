@@ -9,7 +9,7 @@ func main() {
 	router.LoadHTMLGlob("ui/templates/*")
 
 	// from ~/routes.go
-	initializeRoutes(router)
+	initialize(router)
 
 	router.Run(":8081")
 }
