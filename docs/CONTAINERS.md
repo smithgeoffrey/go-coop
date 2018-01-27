@@ -47,3 +47,39 @@ If you create a non-default network, for free you get:
 E.g., if on a non-default network:
 
     docker container exec -it <source container name> ping <dest container name>
+
+### Images
+
+- docker image history
+- docker image inspect
+- docker pull <repo>
+- docker pull <repo>:<tag> # tag defaults to latest
+- docker image tag --help
+- docker image tag smithgeoffrey/go-coop smithgeoffrey/go-coop:testing # same image id
+- docker push smithgeoffrey/go-coop
+
+Dockerfile:
+
+Generally put the the things that change the most at the bottom:
+
+- FROM
+- ENV
+- RUN
+- WORKDIR # change dirs
+- COPY|ADD
+- EXPOSE 80 443
+- CMD
+
+Build & Run:
+
+- docker image build -t mytag .
+- docker image ls
+- docker container run -p 80:80 --rm mytag
+
+
+### Logging
+
+Don't log to a log file.  Log to stdout:
+
+- RUN ln -sf /dev/stdout /var/log/app/access.log && ln -sf /dev/stderr /var/log/app/error.log
+
