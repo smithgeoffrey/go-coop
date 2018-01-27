@@ -1,8 +1,10 @@
 # Logging
 
+Yes, this is just backyard chickens.  But we're doing devops here, so we can't skimp on logging.  Docker has a native logdriver for fluentd.
+
 ### Fluentd to Mongo
 
-It'd be nice to keep life small and simple for running on the pi. This is just a chicken coop after all.  What about this:
+It'd be nice to keep life small and simple for running on the pi. What about this:
 
 - https://www.mongodb.com/post/27619817959/fluentd-mongodb-the-easiest-way-to-log-your-data.
 
@@ -10,7 +12,7 @@ It'd be nice to keep life small and simple for running on the pi. This is just a
 
 ### Fluentd to ELK
 
-If you're thinking more like, "what if I had to run this at work or something more enterprisy?"  ELK is pretty common.  Assuming an ELK stack were already up, all we'd need is a small client to run on containers.  Docker has a native logdriver for fluentd.  And I found a blog showing its use with springboot containers pushing to ELK: https://programmaticponderings.com/2017/04/10/streaming-docker-logs-to-the-elastic-stack-using-fluentd/.
+If you're thinking more like, "what if I had to run this at work or something more enterprisy?"  ELK is pretty common.  Assuming an ELK stack were already up, all we'd need is a small client to run on containers.  I found a blog showing its use with springboot containers pushing to ELK: https://programmaticponderings.com/2017/04/10/streaming-docker-logs-to-the-elastic-stack-using-fluentd/.
 
 For me to test though, I'd need an ELK.  Running it on the pi caused a crash first try. [1]  But as a development exercise, I should be able to run ELK smoothly as a container on my laptop and test containers on the pi pushing logs to it. After that, I could try just pushing to mongo or anything better suited for running on the pi and keeping life simple.
 
