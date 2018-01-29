@@ -14,7 +14,7 @@ From my own experience, Go's answer to OO is that they give you, for any type, m
 
 ### Interfaces
 
-Unlike methods, interfaces hadn't clicked with me much.  So I wanted here to dive deeper.  Maybe just using them will help.  Here's a list of breadcrumbs I looked at, trying to get it:
+Unlike methods, interfaces hadn't clicked with me as well.  So I wanted here to dive deeper.  Maybe just using them will help.  Here's a list of breadcrumbs I looked at, trying better to get it:
 
 - @icza's answer in https://stackoverflow.com/questions/39092925/why-are-interfaces-needed-in-golang
 - https://npf.io/2014/05/intro-to-go-interfaces/
@@ -24,7 +24,15 @@ When troubleshooting interfaces, it's handy to check type. You can do so a few w
 
 - fmt.Printf("Type: %T; Value: %v", foo, foo)       // %T in string formating
 - import reflect && reflect.TypeOf().Kind()         // reflect package
-- someInterface.(type) in switch-case statements    // only for switch statements on interfaces
+- someInterface.(type) in switch-case statements    // only for switch statements against interfaces
+
+Using type checking you can verify the concept of `concrete` type and value: 
+
+    For given interface type Foo and a type Bar that implements it,
+    the concrete type of the inteface is Bar with Bar's concrete value.
+    There's some complexity in the transform (Bar being used as a Foo),
+    in having to manually test concrete type as it gets obscured 
+    during the transform.
 
 ### Type Assertions
 
