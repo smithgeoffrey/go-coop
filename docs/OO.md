@@ -18,7 +18,18 @@ Unlike methods, interfaces hadn't clicked with me much.  So I wanted here to div
 
 - @icza's answer in https://stackoverflow.com/questions/39092925/why-are-interfaces-needed-in-golang
 - https://npf.io/2014/05/intro-to-go-interfaces/
-- https://golang.org/doc/effective_go.html#interfaces_and_types
+- https://golangbot.com/interfaces-part-1/ & https://golangbot.com/interfaces-part-2/
+
+When troubleshooting interfaces, it's handy to check type. You can do so a few ways:
+
+- fmt.Printf("Type: %T; Value: %v", foo, foo)       // %T in string formating
+- import reflect && reflect.TypeOf().Kind()         // reflect package
+- someInterface.(type) in switch-case statements    // only for switch statements on interfaces
+
+### Type Assertions
+
+- https://medium.com/golangspec/type-assertions-in-go-e609759c42e1
+- https://newfivefour.com/golang-interface-type-assertions-switch.html
 
 ### References
 
