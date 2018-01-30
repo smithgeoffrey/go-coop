@@ -20,24 +20,54 @@ Unlike methods, interfaces hadn't clicked with me as well.  So I wanted here to 
 - https://npf.io/2014/05/intro-to-go-interfaces/
 - https://golangbot.com/interfaces-part-1/ & -2/
 
-When troubleshooting interfaces, it's handy to check type. You can do so a few ways:
+### Type Assertions & Type Switches
+
+- https://golangbot.com/interfaces-part-1/
+- https://medium.com/golangspec/type-assertions-in-go-e609759c42e1
+- https://newfivefour.com/golang-interface-type-assertions-switch.html
+
+When working with interfaces, it's handy to check type. You can do so a few ways:
 
 - fmt.Printf("Type: %T; Value: %v", foo, foo)       // %T in string formatting
 - reflect.TypeOf(x) or reflect.TypeOf(x).kind()     // reflect package
-- someInterface.(type) in switch statements    // only for switch statements against interfaces
+- someInterface.(type) in switch statements         // only for switch statements against interfaces
 
-Using type checking you can verify the concept of `concrete` type and value: 
+Using type checking you can verify the concept of an interface's `concrete` type and value:
 
-    For given interface type Foo and a type Bar that implements it,
-    the concrete type of the inteface is Bar with Bar's concrete value.
-    There's some complexity in the transform (Bar being used as a Foo),
-    in having to manually test concrete type as it gets obscured 
-    during the transform.
+    For a given interface Foo and type Bar that implements it, the concrete
+    type of the inteface is Bar with a concrete value being Bar's. There's
 
-### Type Assertions
+Type assertion uses `i.(T)` where T is a type:
 
-- https://medium.com/golangspec/type-assertions-in-go-e609759c42e1
-- https://newfivefour.com/golang-interface-type-assertions-switch.html
+    // returns the concrete value if of that type, else panic
+    someInterface.(int|string|float64)
+    
+    // avoid panic, return the concrete value and ok=true if of that type, else
+    // ok=false and zero value of that type 
+    v, ok := someInterface.(int|string|float64)
+
+Type switch is similar and uses `i.(type)`:
+
+    switch someInterface.(type) {
+    case string:
+        fmt.Printf("string value: %s\n", i.(string))
+    case int:
+        fmt.Printf("int value: %d\n", i.(int))
+    default:
+        fmt.Printf("Type unknown\n")
+    }
+
+There we compare the interface's concrete type against known ones and use type assertion once matched.  A similar pattern is an empty interface argument to a function: you can compare a type with the interface it implements then call a method within the interface's signature:
+
+    
+    func foo(i interface{}) {
+        switch t := i.(type) {
+        case someInteface:
+            t.Method1()
+        default:
+            fmt.Printf("Type unknown\n")
+        }
+    }
 
 ### References
 
