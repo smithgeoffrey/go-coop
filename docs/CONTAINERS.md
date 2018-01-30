@@ -76,10 +76,33 @@ Build & Run:
 - docker image ls
 - docker container run -p 80:80 --rm mytag
 
-
 ### Logging
 
 Don't log to a log file.  Log to stdout:
 
 - RUN ln -sf /dev/stdout /var/log/app/access.log && ln -sf /dev/stderr /var/log/app/error.log
+
+### Data Volumes
+
+Create in Dockerfile:
+
+- VOLUME /var/lib/mydb
+
+Create at Runtime:
+
+- docker image inspect mydb     # shows "Volumes": {"/var/lib/mydb": {}}
+- docker container inspect mydb	# dito
+- docker container run -d --name mydb -v friendlyname-vol:/var/lib/mydb mydb
+- docker volume ls || docker volume inspect
+
+Create Ahead of Time:
+
+- docker volume create --foo
+
+### Bind Mounts
+
+Mapping from host-level file/dir to a container's file/dir.
+
+- only Runtime not Dockerfile
+- docker container run -d --name foo -p 443:443 -v /host/path:/container/path 
 

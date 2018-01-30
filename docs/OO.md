@@ -1,6 +1,6 @@
 # OO
 
-Go's approach is a little differentt:
+Go's approach is a little different:
 
 - no inheritance
 - composition
@@ -18,13 +18,13 @@ Unlike methods, interfaces hadn't clicked with me as well.  So I wanted here to 
 
 - @icza's answer in https://stackoverflow.com/questions/39092925/why-are-interfaces-needed-in-golang
 - https://npf.io/2014/05/intro-to-go-interfaces/
-- https://golangbot.com/interfaces-part-1/ & https://golangbot.com/interfaces-part-2/
+- https://golangbot.com/interfaces-part-1/ & -2/
 
 When troubleshooting interfaces, it's handy to check type. You can do so a few ways:
 
-- fmt.Printf("Type: %T; Value: %v", foo, foo)       // %T in string formating
-- import reflect && reflect.TypeOf().Kind()         // reflect package
-- someInterface.(type) in switch-case statements    // only for switch statements against interfaces
+- fmt.Printf("Type: %T; Value: %v", foo, foo)       // %T in string formatting
+- reflect.TypeOf(x) or reflect.TypeOf(x).kind()     // reflect package
+- someInterface.(type) in switch statements    // only for switch statements against interfaces
 
 Using type checking you can verify the concept of `concrete` type and value: 
 
