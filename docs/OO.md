@@ -117,7 +117,7 @@ An Interface Rule is that the concrete value stored in an interface is not addre
     i2 = &t1   // works
     i2.method1(arg1)
     
-You can call pointer-receiver methods on things (i) that are already a pointer or (ii) whose address can be determined. Yet the Interface Rule says the concrete value of an interface is not addressable, so we are limited to assigning the &t1, meaning only option (i) is available.
+You can call pointer-receiver methods on things (i) that are already a pointer or (ii) whose address can be determined. Yet the Interface Rule says the concrete value of an interface is not addressable, so we are limited to assigning the &t1, meaning only option (i) is available because the interface was implemented using a pointer-recevier.  Compare to the former case where the implementation was a value-receiver, in which case the addressibility is possible, hence both options are available.
 
 ### References
 
