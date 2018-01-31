@@ -69,6 +69,57 @@ There we compare the interface's concrete type against known ones and use type a
         }
     }
 
+### Pointer Receivers & Value Receivers
+
+A type can can implement interfaces with methods having receivers that are pointer or value based:
+
+    // interface calling for method1
+    type MyInterface interface {
+        method1(arg1) (string, error)
+    }
+    
+    type MyType1 struct {
+        foo int
+        bar string
+    }
+        
+    type MyType2 struct {
+        a int
+        b string
+    }
+    
+    // value receiver
+    func (r MyType1) method1(arg1) (string, error) {
+        <insert>
+    }
+    
+    // pointer receiver 
+    func (r *MyType2) method1(arg1) (string, error) {
+        <insert>
+    }
+
+An Interface Rule is that the concrete value stored in an interface is not addressable.  That complicates the usage of interfaces when implemented using a pointer receiver:
+
+    // value receivers mean interface can be assigned the type or the &type
+    // and the complier can render the method for either
+    var i1 MyInterface
+    t1 := MyType1{"32", "green"}
+    t2 := MyType1{"23", "eggs"}
+    i1 = t1
+    i1.method1(arg1)
+    i1 = &t2
+    i1.method1(arg1)
+        
+    // pointer receivers mean interface can be assigned only the &type not the type
+    var i2 MyInterface
+    t1 := MyType2{"23", "eggs"}
+    //i2 = t1  // fails
+    i2 = &t1   // works
+    i2.method1(arg1)
+    
+You can call pointer-receiver methods on things (i) that are already a pointer or (ii) whose address can be determined. Yet the Interface Rule says the concrete value of an interface is not addressable, so we are limited to assigning the &t1, meaning only option (i) is available.
+
 ### References
 
 [1] `Go in Practice`, p130 by Butcher & Farina
+[2] https://golangbot.com/interfaces-part-2/
