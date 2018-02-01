@@ -2,29 +2,43 @@
 
 Go's approach is a little different:
 
-- no inheritance
-- composition
-
-I've heard it touched upon in different ways:
-
+- Not inheritance but composition
 - Not `is a __` but `has a __`
 - Instead of building large trees of object types, create interfaces that describe desired behavior [1]
 
-From my own experience, Go's answer to OO is that they give you, for any type, methods and interfaces.  Even less, I've been using just methods.  Structs already get me what feels like an object having properties. By adding methods, I feel mostly there.  Any gap should be fillable with interfaces, when I get there. I like the smallness of it in concept.
+From my own experience, Go's answer to OO is that they give you, for any type, methods and interfaces.  Even less, I'd been using just methods.  Structs alone got me what felt like an object having properties. By adding methods, I was mostly there.  But my gut kept telling me that any real OO in Go would require my becoming proficient with interfaces.
 
-### Interfaces
+I had been ignoring interfaces.  They hadn't clicked with me, maybe because I simply wasn't using them.  So I started reading:
 
-Unlike methods, interfaces hadn't clicked with me as well.  So I wanted here to dive deeper.  Maybe just using them will help.  Here's a list of breadcrumbs I looked at, trying better to get it:
-
+- `The Go Programming Language` at Ch. 7 by Donovan and Kernighan
 - @icza's answer in https://stackoverflow.com/questions/39092925/why-are-interfaces-needed-in-golang
 - https://npf.io/2014/05/intro-to-go-interfaces/
 - https://golangbot.com/interfaces-part-1/ & -2/
-
-### Type Assertions & Type Switches
-
-- https://golangbot.com/interfaces-part-1/
 - https://medium.com/golangspec/type-assertions-in-go-e609759c42e1
 - https://newfivefour.com/golang-interface-type-assertions-switch.html
+
+### Assignment
+
+At the end of the day, types get assigned to interfaces.  You can assign if the type has the methods of the interface.  Only those methods will be callable on the interface, even if the concrete type has more.  The interface stores a type and its value.
+
+    var w io.Writer
+    w = os.Stdout
+
+There it is said that w is storing a type *os.File having some value, which wasn't obvious to me.  It looks like os.Stdout is just a var Stdout in the os package, where the var is assigned `NewFile(uintptr(syscall.Stdout), "/dev/stdout")`.  See https://golang.org/src/os/file.go.  In turn, NewFile() I found at https://golang.org/src/os/file_unix.go, being a function returning a *File.  All of which is to say, indeed, `w = os.Stdout` does appear to store a type of *os.File.  Phew.
+
+So in this one assignment, the interface is assuming a dynamic type *os.File and a dynamic value being what? I think it's the dereferenced value of *os.File, in this case, /dev/stdout.  So calling the Write() method of the interface will print to stdout.
+
+    w.Write([]byte("cluck cluck"))
+
+And just to be thorough, having to pass a slice of byte also isn't obvious.  So I looked at io.Writer at https://golang.org/src/io/io.go and saw this, which is enough for me for now:
+
+    type Writer interface {
+        Write(p []byte) (n int, err error)
+    }
+
+Finally, to thoroughly take this to the end, I might have thought instantiating a []byte would be more like `[]byte{foo}` not `[]byte(foo)`.  It looks like my thought is right, but that the () is syntactic sugar to allow entry of a string literal that is human readable, which the compiler converts at runtime to a non-human-unreadable {}.  See, e.g., https://stackoverflow.com/questions/25691879/creating-a-byte-slice-with-a-known-text-string-in-golang.  
+
+### Type Assertions & Type Switches
 
 When working with interfaces, it's handy to check type. You can do so a few ways:
 
@@ -35,11 +49,11 @@ When working with interfaces, it's handy to check type. You can do so a few ways
 Using type checking you can verify the concept of an interface's `concrete` type and value:
 
     For a given interface Foo and type Bar that implements it, the concrete
-    type of the inteface is Bar with a concrete value being Bar's. There's
+    type of the inteface is Bar with a concrete value being Bar's.
 
 Type assertion uses `i.(T)` where T is a type:
 
-    // returns the concrete value if of that type, else panic
+    // returns the concrete value but panics if 
     someInterface.(int|string|float64)
     
     // avoid panic, return the concrete value and ok=true if of that type, else
