@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <!-- Hacked this from https://getbootstrap.com/docs/4.1/getting-started/introduction/ -->
+    <!-- Required meta tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+<body>
+
+    <!--
+    Hacked this from https://bootsnipp.com/snippets/featured/password-strength-meter
+    -->
+    <div class="container">  
+    <div class="row" id="pwd-container">
+        <div class="col-md-4"></div>    
+        <div class="col-md-4">
+        <section class="login-form">
+            <br>
+            <img src="/public/images/favicon.ico" class="img-responsive" alt="" />
+            <br><br>
+            <form method="post" action="#" role="login">
+                <input type="text" name="userid" placeholder="Email" required class="form-control input-lg" />
+                <input type="password" name="password" id="password" placeholder="Password" required class="form-control input-lg"/>
+                <br>
+                <button type="submit" name="go" class="btn btn-lg btn-primary btn-block">Sign in</button>
+                <div>
+                    <a href="/signin">Create account</a> or <a href="/resetPassword">reset password</a>
+                </div>
+            </form>        
+        </section>  
+        </div>
+    </div>
+    </div>
+
+</body>
+</html>

@@ -1,5 +1,4 @@
 vendor/*
-app
 .idea
 *.iml
 *.toml
