@@ -1,24 +1,60 @@
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Document</title>
-</head>
-<body>
-USER NAME {{.UserID}}<br>
-FIRST {{.First}}<br>
-LAST {{.Last}}<br>
-PASSWORD {{.Password}}<br>
-LOGGED IN {{.LoggedIn}}<br>
-{{if .LoggedIn}}
-<h2><a href="/logout">log out</a></h2>
-{{else}}
-<h2><a href="/login">login</a></h2>
-{{end}}
-<br>
-<h2><a href="/other">other page</a></h2>
+  <head>
+    <title>Index</title>
+    <!-- Hacked this from https://getbootstrap.com/docs/4.1/getting-started/introduction/ -->
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  </head>
 
-<img src="/public/images/session.jpg" style="width:600px;height:600px;">
+  <body>
+    <!--
+    Hacked this from https://bootsnipp.com/snippets/featured/password-strength-meter
+    -->
+    <div class="container">  
+    <div class="row" id="pwd-container">
+        <div class="col-md-4"></div>    
+        <div class="col-md-4">
+        <section class="login-form">
+            <br>
+            <img src="/public/images/favicon.ico" class="img-responsive" alt="" />
+            <br><br>
+            <form method="post" action="#" role="login">
+                <input type="email" name="email" placeholder="Email" required class="form-control input-lg" />
+                <input type="password" class="form-control input-lg" id="password" placeholder="Password" required="" />
+                <br>
+                <button type="submit" name="go" class="btn btn-lg btn-primary btn-block">Sign in</button>
+                <div>
+                    <a href="#">Create account</a> or <a href="#">reset password</a>
+                </div>
+            </form>        
+        </section>  
+        </div>
+    </div>
+    </div>
 
-</body>
+    USER NAME {{.UserID}}<br>
+    FIRST {{.First}}<br>
+    LAST {{.Last}}<br>
+    PASSWORD {{.Password}}<br>
+    LOGGED IN {{.LoggedIn}}<br>
+    {{if .LoggedIn}}
+    <h2><a href="/logout">logout</a></h2>
+    {{else}}
+    <h2><a href="/login">login</a></h2>
+    {{end}}
+    <br>
+    <h2><a href="/other">other page</a></h2>
+
+    <img src="/public/images/session.jpg" style="width:600px;height:600px;">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
 </html>

@@ -3,20 +3,21 @@ package main
 import (
 	"html/template"
 	"net/http"
+	"time"
 )
 
-// Tpl is a pointer to template.Template in the html package.
-// Create the var for a tpl.
+// Tpl is a pointer to template.Template in the html package. Create the
+// var for it.
 var tpl *template.Template
 
-// Initialize the tpl var, to load all our HTML templates
-// that live under the top-level templates dir.
+// Initialize the tpl var, to load all our HTML templates that live under
+// the top-level templates dir.
 func init() {
 	tpl = template.Must(template.ParseGlob("templates/*"))
 }
 
-// Having staged the tpl var with all our templates, we move on
-// to defining each of our routes.
+// Having staged the tpl var containing all our templates, we move on to
+// defining each of our routes mapped in main.go.
 
 // Index is the home page Handler function
 func index(w http.ResponseWriter, req *http.Request) {
@@ -24,11 +25,13 @@ func index(w http.ResponseWriter, req *http.Request) {
 	tpl.ExecuteTemplate(w, "index.gohtml", userData)
 }
 
-// Signup encrypts the provided password and registers a user struct
+// Signin encrypts the provided password and registers a user struct
 // in the dbUsers map.
-func signup(w http.ResponseWriter, req *http.Request) {
+func signin(w http.ResponseWriter, req *http.Request) {
 
-	// Redirect to home page if already signed up
+	// Redirect to home page if already signed in. We run getUserAndSession()
+	// at the beginning of each route to capture user and session state
+	// for processing.
 	userData, _ := getUserAndSession(w, req)
 	if _, ok := dbUsers[userData.UserID]; ok {
 		http.Redirect(w, req, "/", http.StatusSeeOther)
@@ -70,7 +73,7 @@ func signup(w http.ResponseWriter, req *http.Request) {
 	}
 
 	// Render page if not a POST
-	tpl.ExecuteTemplate(w, "signup.gohtml", nil)
+	tpl.ExecuteTemplate(w, "signin.gohtml", nil)
 }
 
 func login(w http.ResponseWriter, req *http.Request) {
@@ -96,7 +99,8 @@ func login(w http.ResponseWriter, req *http.Request) {
 		}
 
 		// Add sessionID to dbSessions to effect the login
-		dbSessions[sessionID] = userID
+		s := session{userID, time.Now()}
+		dbSessions[sessionID] = s
 
 		// Redirect to home page after login
 		http.Redirect(w, req, "/", http.StatusSeeOther)
@@ -133,18 +137,18 @@ func logout(w http.ResponseWriter, req *http.Request) {
 // Other is a test secondary Handler function, registered in DefaultServeMux.
 func other(w http.ResponseWriter, req *http.Request) {
 
-	// get cookie
-	c, err := req.Cookie("session")
-	if err != nil {
-		http.Redirect(w, req, "/", http.StatusSeeOther)
-		return
-	}
-	un, ok := dbSessions[c.Value]
-	if !ok {
-		http.Redirect(w, req, "/", http.StatusSeeOther)
-		return
-	}
-	u := dbUsers[un]
-	tpl.ExecuteTemplate(w, "other.gohtml", u)
+	userData, _ := getUserAndSession(w, req)
 
+	// Redirect to home page if already logged out
+	if !userData.LoggedIn {
+		http.Redirect(w, req, "/", http.StatusSeeOther)
+		return
+	}
+
+	tpl.ExecuteTemplate(w, "other.gohtml", userData)
+
+}
+
+func favicon(w http.ResponseWriter, req *http.Request) {
+	http.ServeFile(w, req, "public/images/favicon.ico")
 }
