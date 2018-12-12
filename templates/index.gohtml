@@ -11,31 +11,6 @@
   </head>
 
   <body>
-    <!--
-    Hacked this from https://bootsnipp.com/snippets/featured/password-strength-meter
-    -->
-    <div class="container">  
-    <div class="row" id="pwd-container">
-        <div class="col-md-4"></div>    
-        <div class="col-md-4">
-        <section class="login-form">
-            <br>
-            <img src="/public/images/favicon.ico" class="img-responsive" alt="" />
-            <br><br>
-            <form method="post" action="#" role="login">
-                <input type="email" name="email" placeholder="Email" required class="form-control input-lg" />
-                <input type="password" class="form-control input-lg" id="password" placeholder="Password" required="" />
-                <br>
-                <button type="submit" name="go" class="btn btn-lg btn-primary btn-block">Sign in</button>
-                <div>
-                    <a href="#">Create account</a> or <a href="#">reset password</a>
-                </div>
-            </form>        
-        </section>  
-        </div>
-    </div>
-    </div>
-
     USER NAME {{.UserID}}<br>
     FIRST {{.First}}<br>
     LAST {{.Last}}<br>
@@ -48,8 +23,6 @@
     {{end}}
     <br>
     <h2><a href="/other">other page</a></h2>
-
-    <img src="/public/images/session.jpg" style="width:600px;height:600px;">
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

@@ -10,18 +10,31 @@ import (
 // var for it.
 var tpl *template.Template
 
-// Initialize the tpl var, to load all our HTML templates that live under
+// Initialize the tpl var to load all our HTML templates that live under
 // the top-level templates dir.
 func init() {
 	tpl = template.Must(template.ParseGlob("templates/*"))
 }
 
 // Having staged the tpl var containing all our templates, we move on to
-// defining each of our routes mapped in main.go.
+// defining each of our routes registered in main.go.
+
+// Favicon serves our favicon.ico file if requested by a client browser
+func favicon(w http.ResponseWriter, req *http.Request) {
+	http.ServeFile(w, req, "public/images/favicon.ico")
+}
 
 // Index is the home page Handler function
 func index(w http.ResponseWriter, req *http.Request) {
+	// Get user and session state
 	userData, _ := getUserAndSession(w, req)
+
+	// Redirect to login page if user is logged out
+	if !userData.LoggedIn {
+		http.Redirect(w, req, "/login", http.StatusSeeOther)
+		return
+	}
+
 	tpl.ExecuteTemplate(w, "index.gohtml", userData)
 }
 
@@ -120,9 +133,8 @@ func logout(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// Remove sessionId
+	// Unregister the sessionId in dbSession and remove the session cookie.
 	delete(dbSessions, sessionID)
-
 	cookie := &http.Cookie{
 		Name:   "session",
 		Value:  "deleteNow",
@@ -130,8 +142,27 @@ func logout(w http.ResponseWriter, req *http.Request) {
 	}
 	http.SetCookie(w, cookie)
 
+	// Garbage collect stale sessions registered in dbSessions.
+	sessionTimout := time.Second * time.Duration(sessionLength)
+	if time.Now().Sub(dbSessionsCleaned) > sessionTimout {
+		go cleanSessions()
+	}
+
 	http.Redirect(w, req, "/", http.StatusSeeOther)
 	return
+}
+
+// ResetPassword is a page dedicated to just that
+func resetPassword(w http.ResponseWriter, req *http.Request) {
+
+	userData, _ := getUserAndSession(w, req)
+
+	if !userData.LoggedIn {
+		http.Redirect(w, req, "/", http.StatusSeeOther)
+		return
+	}
+
+	tpl.ExecuteTemplate(w, "resetPassword.gohtml", userData)
 }
 
 // Other is a test secondary Handler function, registered in DefaultServeMux.
@@ -139,16 +170,11 @@ func other(w http.ResponseWriter, req *http.Request) {
 
 	userData, _ := getUserAndSession(w, req)
 
-	// Redirect to home page if already logged out
+	// Redirect to home page if logged out
 	if !userData.LoggedIn {
 		http.Redirect(w, req, "/", http.StatusSeeOther)
 		return
 	}
 
 	tpl.ExecuteTemplate(w, "other.gohtml", userData)
-
-}
-
-func favicon(w http.ResponseWriter, req *http.Request) {
-	http.ServeFile(w, req, "public/images/favicon.ico")
 }
