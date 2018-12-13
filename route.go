@@ -38,9 +38,9 @@ func index(w http.ResponseWriter, req *http.Request) {
 	tpl.ExecuteTemplate(w, "index.gohtml", userData)
 }
 
-// Signin encrypts the provided password and registers a user struct
+// CreateAccount encrypts the provided password and registers a user struct
 // in the dbUsers map.
-func signin(w http.ResponseWriter, req *http.Request) {
+func createAccount(w http.ResponseWriter, req *http.Request) {
 
 	// Redirect to home page if already signed in. We run getUserAndSession()
 	// at the beginning of each route to capture user and session state
@@ -74,9 +74,7 @@ func signin(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		// Register user in dbUsers map.  That is the test for being signed up,
-		// so set the `signedUp` field to true when building the composite literal
-		// for the user{}.
+		// Register user in dbUsers map
 		newuser := user{userID, first, last, encryptedPassword, false}
 		dbUsers[userID] = newuser
 
@@ -86,7 +84,7 @@ func signin(w http.ResponseWriter, req *http.Request) {
 	}
 
 	// Render page if not a POST
-	tpl.ExecuteTemplate(w, "signin.gohtml", nil)
+	tpl.ExecuteTemplate(w, "createAccount.gohtml", nil)
 }
 
 func login(w http.ResponseWriter, req *http.Request) {
@@ -158,6 +156,28 @@ func resetPassword(w http.ResponseWriter, req *http.Request) {
 	userData, _ := getUserAndSession(w, req)
 
 	if !userData.LoggedIn {
+		http.Redirect(w, req, "/", http.StatusSeeOther)
+		return
+	}
+
+	if req.Method == http.MethodPost {
+
+		// Get posted password
+		newPassword := req.FormValue("password")
+
+		// Ecrypt password before storing it.  If the encryption errs, respond with
+		// an Internal Server Error.
+		encryptedPassword, err := getEncryptedPassword(newPassword)
+		if err != nil {
+			http.Error(w, "Internal server error", http.StatusInternalServerError)
+			return
+		}
+
+		// Update user in dbUsers map
+		userData.Password = encryptedPassword
+		dbUsers[userData.UserID] = userData
+
+		// Redirect to Home page after changing password
 		http.Redirect(w, req, "/", http.StatusSeeOther)
 		return
 	}

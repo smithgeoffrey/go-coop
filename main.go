@@ -8,14 +8,15 @@ func main() {
 
 	// Handlers for pages
 	http.HandleFunc("/", index)
-	http.HandleFunc("/signin", signin)
+	http.HandleFunc("/createAccount", createAccount)
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/logout", logout)
+	http.HandleFunc("/resetPassword", resetPassword)
 	http.HandleFunc("/other", other)
 	http.HandleFunc("/favicon.ico", favicon)
 
-	// Handler for file-serving the `public` dir.  Prefix stripping is
-	// needed to be able to do this in our templates:
+	// Handler for file-serving the `public` dir.  The complexity of prefix stripping
+	// is needed to be able to do this, simply, in our templates:
 	//
 	//    <img src="/public/images/image1.jpg">
 	//
