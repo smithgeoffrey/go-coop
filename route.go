@@ -184,17 +184,3 @@ func resetPassword(w http.ResponseWriter, req *http.Request) {
 
 	tpl.ExecuteTemplate(w, "resetPassword.gohtml", userData)
 }
-
-// Other is a test secondary Handler function, registered in DefaultServeMux.
-func other(w http.ResponseWriter, req *http.Request) {
-
-	userData, _ := getUserAndSession(w, req)
-
-	// Redirect to home page if logged out
-	if !userData.LoggedIn {
-		http.Redirect(w, req, "/", http.StatusSeeOther)
-		return
-	}
-
-	tpl.ExecuteTemplate(w, "other.gohtml", userData)
-}

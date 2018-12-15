@@ -12,7 +12,6 @@ func main() {
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/logout", logout)
 	http.HandleFunc("/resetPassword", resetPassword)
-	http.HandleFunc("/other", other)
 	http.HandleFunc("/favicon.ico", favicon)
 
 	// Handler for file-serving the `public` dir.  The complexity of prefix stripping
